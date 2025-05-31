@@ -39,6 +39,9 @@ class LinkedInGenieStreamlit:
         if 'linkedin_profile_loaded' not in st.session_state:
             st.session_state.linkedin_profile_loaded = False
         
+        if 'welcome_animation_shown' not in st.session_state:
+            st.session_state.welcome_animation_shown = False
+        
         # Apply custom styling
         self._apply_custom_styling()
 
@@ -348,8 +351,8 @@ class LinkedInGenieStreamlit:
         # Main chat interface
         st.markdown("---")
         
-        # Display welcome message if no conversation history
-        if not st.session_state.messages:
+        # Display welcome message if no conversation history and animation not shown yet
+        if not st.session_state.messages and not st.session_state.welcome_animation_shown:
             st.markdown("#### Welcome to LinkedIn Assistant! I can help you with:")
             
             # Define features with their corresponding icons
@@ -376,7 +379,7 @@ class LinkedInGenieStreamlit:
                 }
             ]
             
-            # Display features with streaming effect
+            # Display features with streaming effect only on first load
             for i, feature in enumerate(features):
                 icon_path = os.path.join(project_root, "assets", feature["icon"])
                 icon_b64 = self._load_svg_icon(icon_path)
@@ -387,12 +390,64 @@ class LinkedInGenieStreamlit:
                         icon_b64, 
                         feature["title"], 
                         feature["description"], 
-                        delay=0.01  # 0.01 second delay between each feature
+                        delay=0.01 * i  # Staggered delay for each feature
                     )
                 else:
                     # Fallback if icon can't be loaded
                     st.markdown(f"- **{feature['title']}** - {feature['description']}")
             
+            # Set flag to indicate welcome animation has been shown
+            st.session_state.welcome_animation_shown = True
+            
+        elif not st.session_state.messages and st.session_state.welcome_animation_shown:
+            # Display static welcome message (no animation) if already shown before
+            st.markdown("#### Welcome to LinkedIn Assistant! I can help you with:")
+            
+            features = [
+                {
+                    "icon": "user-check.svg",
+                    "title": "Profile Analysis",
+                    "description": "Analyze your LinkedIn profile for improvements"
+                },
+                {
+                    "icon": "pencil-simple-line.svg", 
+                    "title": "Content Rewriting",
+                    "description": "Suggest better ways to present your experience"
+                },
+                {
+                    "icon": "read-cv-logo.svg",
+                    "title": "Job Fit Evaluation", 
+                    "description": "Evaluate how well you match specific job requirements"
+                },
+                {
+                    "icon": "trend-up.svg",
+                    "title": "Career Guidance",
+                    "description": "Provide personalized career advice"
+                }
+            ]
+            
+            # Display features without animation (static)
+            for feature in features:
+                icon_path = os.path.join(project_root, "assets", feature["icon"])
+                icon_b64 = self._load_svg_icon(icon_path)
+                
+                if icon_b64:
+                    # Display static feature without streaming
+                    feature_html = f"""
+                    <div class="feature-item">
+                        <img src="data:image/svg+xml;base64,{icon_b64}" class="feature-icon" alt="{feature['title']} icon">
+                        <div class="feature-content">
+                            <div class="feature-title">{feature['title']}</div>
+                            <div class="feature-description">{feature['description']}</div>
+                        </div>
+                    </div>
+                    """
+                    st.markdown(feature_html, unsafe_allow_html=True)
+                else:
+                    # Fallback if icon can't be loaded
+                    st.markdown(f"- **{feature['title']}** - {feature['description']}")
+        
+        if not st.session_state.messages:
             st.markdown("---")
         
         # Chat container
