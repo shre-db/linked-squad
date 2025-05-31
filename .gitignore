@@ -1,0 +1,21 @@
+*__pycache__/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pth
+*.pt
+*.json
+*.ckpt
+*.onnx
+.env
+*.zip
+*.tar
+*.tar.gz
+*.log
+
+# Do not ignore the .png image inside the docs directory
+!docs/*.png
+!assets/*.svg
+!assets/*.png
