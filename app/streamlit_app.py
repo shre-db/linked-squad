@@ -42,6 +42,12 @@ class LinkedInGenieStreamlit:
         if 'welcome_animation_shown' not in st.session_state:
             st.session_state.welcome_animation_shown = False
         
+        if 'pending_message' not in st.session_state:
+            st.session_state.pending_message = None
+        
+        if 'processing' not in st.session_state:
+            st.session_state.processing = False
+        
         # Apply custom styling
         self._apply_custom_styling()
 
@@ -453,7 +459,7 @@ class LinkedInGenieStreamlit:
         # Chat container
         chat_container = st.container()
         
-        # Display conversation history
+        # Display conversation history FIRST
         with chat_container:
             for i, msg in enumerate(st.session_state.messages):
                 if msg["role"] == "user":
@@ -461,17 +467,26 @@ class LinkedInGenieStreamlit:
                 else:
                     message(msg["content"], is_user=False, key=f"bot_{i}")
         
+        # Handle pending message processing AFTER chat messages are displayed
+        if st.session_state.pending_message and not st.session_state.processing:
+            st.session_state.processing = True
+            with chat_container:
+                with st.spinner("Processing..."):
+                    bot_response = self._process_user_input(st.session_state.pending_message)
+            
+            # Add bot response to session
+            st.session_state.messages.append({"role": "assistant", "content": bot_response})
+            
+            # Clear pending message and processing flag
+            st.session_state.pending_message = None
+            st.session_state.processing = False
+            st.rerun()
+        
         # Quick action buttons with custom icons
-        st.markdown("#### Quick Actions")
+        # st.markdown("#### Quick Actions")
         
         # Create more compact columns for buttons with reduced spacing
         col1, col2, col3, col4 = st.columns(4, gap="small")
-        
-        # # Load icons for buttons
-        # linkedin_icon = self._load_svg_icon(os.path.join(project_root, "assets", "linkedin-logo.svg"))
-        # trend_icon = self._load_svg_icon(os.path.join(project_root, "assets", "trend-up.svg"))
-        # pencil_icon = self._load_svg_icon(os.path.join(project_root, "assets", "pencil-simple-line.svg"))
-        # user_check_icon = self._load_svg_icon(os.path.join(project_root, "assets", "user-check.svg"))
         
         with col1:
             if st.button("Demo Profile", key="demo_btn", help="Load John Smith demo profile", use_container_width=True):
@@ -498,17 +513,13 @@ class LinkedInGenieStreamlit:
 
     def _handle_user_input(self, user_input):
         """Handle user input and update the chat"""
-        # Add user message to session
+        # Add user message to session immediately
         st.session_state.messages.append({"role": "user", "content": user_input})
         
-        # Process through the bot
-        with st.spinner("Processing..."):
-            bot_response = self._process_user_input(user_input)
+        # Set pending message for processing on next run
+        st.session_state.pending_message = user_input
         
-        # Add bot response to session
-        st.session_state.messages.append({"role": "assistant", "content": bot_response})
-        
-        # Rerun to update the interface
+        # Rerun to show the user's message and trigger processing
         st.rerun()
 
     def _display_streaming_feature(self, icon_b64, title, description, delay=0):
