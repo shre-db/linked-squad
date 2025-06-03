@@ -34,24 +34,8 @@ Generate optimized rewrite suggestions for LinkedIn profile sections. Focus on:
 
 **Output Format (JSON only):**
 {{
-    "rewrites": [
-        {{
-            "section": "summary",
-            "suggestions": [
-                "Complete optimized summary suggestion 1 with keywords and achievements",
-                "Complete optimized summary suggestion 2 with different angle and metrics",
-                "Complete optimized summary suggestion 3 focusing on target role alignment"
-            ]
-        }},
-        {{
-            "section": "experience",
-            "entry_title": "Most Recent Position Title",
-            "suggestions": [
-                "• Quantified achievement 1 with specific metrics and impact\n• Action-oriented responsibility with measurable outcome\n• Leadership or collaboration example with business results",
-                "• Alternative framing of key achievements with different metrics\n• Process improvement or innovation example\n• Stakeholder management or strategic contribution"
-            ]
-        }}
-    ],
+    "summary_suggestions": "**Summary Option 1:**\n\nComplete optimized summary suggestion 1 with keywords and achievements\n\n**Summary Option 2:**\n\nComplete optimized summary suggestion 2 with different angle and metrics\n\n**Summary Option 3:**\n\nComplete optimized summary suggestion 3 focusing on target role alignment",
+    "experience_suggestions": "**Experience Rewrite Option 1:**\n\n• Quantified achievement 1 with specific metrics and impact\n• Action-oriented responsibility with measurable outcome\n• Leadership or collaboration example with business results\n\n**Experience Rewrite Option 2:**\n\n• Alternative framing of key achievements with different metrics\n• Process improvement or innovation example\n• Stakeholder management or strategic contribution",
     "optimization_notes": "Brief explanation of the key improvements made in the suggestions, including how any specific user instructions were addressed"
 }}"""
         )

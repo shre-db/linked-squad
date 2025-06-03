@@ -36,7 +36,7 @@ def build_graph():
         }
     )
 
-    # All specialized agents now route to output processing instead of END
+    # All specialized agents route to output processing operation instead of END
     graph.add_edge("AnalyzeProfile", "ProcessAgentOutput")
     graph.add_edge("RewriteContent", "ProcessAgentOutput") 
     graph.add_edge("EvaluateJobFit", "ProcessAgentOutput")

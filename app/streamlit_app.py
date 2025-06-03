@@ -190,28 +190,37 @@ class LinkedInGenieStreamlit:
         if not data:
             return ""
         
-        formatted = f"### {title}\n\n"
+        # Since the agent responses now contain markdown-formatted strings as values,
+        # we just need to concatenate all the values without showing the keys
+        formatted = ""
         
         if isinstance(data, dict):
             for section, content in data.items():
-                section_title = section.replace('_', ' ').title()
-                formatted += f"**{section_title}:**\n"
-                
-                if isinstance(content, list):
-                    for i, item in enumerate(content, 1):
-                        if isinstance(item, dict):
-                            formatted += f"  {i}. "
-                            for key, value in item.items():
-                                formatted += f"{key}: {value} | "
-                            formatted = formatted.rstrip(" | ") + "\n"
-                        else:
-                            formatted += f"  - {item}\n"
+                # Skip certain meta fields that aren't meant for display
+                if section in ['overall_score', 'overall_fit_score']:
+                    continue
+                    
+                if isinstance(content, str):
+                    # Content is already markdown-formatted, just add it
+                    formatted += f"{content}\n\n"
+                elif isinstance(content, (int, float)):
+                    # Handle numeric values like scores
+                    section_title = section.replace('_', ' ').title()
+                    formatted += f"**{section_title}:** {content}\n\n"
+                elif isinstance(content, list):
+                    # Handle any remaining lists (though these should be rare now)
+                    section_title = section.replace('_', ' ').title()
+                    formatted += f"**{section_title}:**\n"
+                    for item in content:
+                        formatted += f"- {item}\n"
+                    formatted += "\n"
                 elif isinstance(content, dict):
+                    # Handle any remaining nested dicts (though these should be rare now)
+                    section_title = section.replace('_', ' ').title()
+                    formatted += f"**{section_title}:**\n"
                     for key, value in content.items():
-                        formatted += f"  - {key}: {value}\n"
-                else:
-                    formatted += f"  {content}\n"
-                formatted += "\n"
+                        formatted += f"- {key}: {value}\n"
+                    formatted += "\n"
         
         return formatted
 

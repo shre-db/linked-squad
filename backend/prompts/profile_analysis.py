@@ -32,34 +32,14 @@ Conduct a thorough evaluation covering:
 **Output Format - Respond with ONLY this JSON structure:**
 ```json
 {{
-    "analysis_summary": "Brief overview of profile strengths and key improvement areas (max 200 chars)",
-    "strengths": [
-        "Specific strength 1",
-        "Specific strength 2", 
-        "Specific strength 3"
-    ],
-    "improvement_opportunities": [
-        "Specific gap 1 with actionable recommendation",
-        "Specific gap 2 with clear improvement strategy",
-        "Specific gap 3 with implementation guidance"
-    ],
-    "keyword_analysis": {{
-        "current_keywords": ["keyword1", "keyword2", "keyword3"],
-        "missing_keywords": ["missing1", "missing2", "missing3"],
-        "optimization_strategy": "Brief strategy for improving keyword presence"
-    }},
-    "achievement_assessment": {{
-        "quantified_achievements": 0,
-        "total_achievements": 0,
-        "quantification_opportunities": ["Opportunity 1", "Opportunity 2"]
-    }},
+    "analysis_summary": "Brief overview of profile strengths and key improvement areas",
+    "strengths": "**Key Strengths:**\n\n- Specific strength 1\n- Specific strength 2\n- Specific strength 3",
+    "improvement_opportunities": "**Areas for Improvement:**\n\n**Gap 1:** Specific gap with actionable recommendation\n\n**Gap 2:** Specific gap with clear improvement strategy\n\n**Gap 3:** Specific gap with implementation guidance",
+    "keyword_analysis": "**Current Keywords:**\n\nkeyword1, keyword2, keyword3\n\n**Missing Keywords:**\n\nmissing1, missing2, missing3\n\n**Optimization Strategy:**\n\nBrief strategy for improving keyword presence",
+    "achievement_assessment": "**Achievement Quantification:**\n\nQuantified: 0 out of 0 total achievements\n\n**Quantification Opportunities:**\n\n- Opportunity 1\n- Opportunity 2",
     "overall_score": 85,
-    "priority_actions": [
-        "Highest priority action",
-        "Second priority action",
-        "Third priority action"
-    ],
-    "analysis_notes": "Additional insights (max 300 chars)"
+    "priority_actions": "**Top Priority Actions:**\n\n**Action 1:** Highest priority action\n\n**Action 2:** Second priority action\n\n**Action 3:** Third priority action",
+    "analysis_notes": "Additional insights and personalized recommendations"
 }}
 ```
 

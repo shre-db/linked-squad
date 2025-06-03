@@ -35,36 +35,12 @@ Provide comprehensive career guidance covering:
 **Output Format (JSON only):**
 {{
     "guidance_summary": "Overview of key career recommendations based on user query and profile",
-    "immediate_actions": [
-        "Specific action 1 with clear steps and timeline",
-        "Specific action 2 with implementation guidance",
-        "Specific action 3 with expected outcomes"
-    ],
-    "skill_development": {{
-        "priority_skills": ["skill1", "skill2", "skill3"],
-        "learning_resources": ["resource1", "resource2", "resource3"],
-        "skill_building_strategy": "Comprehensive plan for acquiring priority skills"
-    }},
-    "networking_strategy": {{
-        "target_connections": ["connection type 1", "connection type 2"],
-        "networking_activities": ["activity1", "activity2", "activity3"],
-        "networking_goals": "Specific networking objectives and outcomes"
-    }},
-    "market_positioning": {{
-        "value_proposition": "Clear statement of unique professional value",
-        "positioning_strategy": "How to position yourself in the target market",
-        "competitive_advantages": ["advantage1", "advantage2"]
-    }},
-    "long_term_roadmap": [
-        "6-month milestone with specific goals",
-        "1-year milestone with measurable outcomes",
-        "2-year vision with strategic objectives"
-    ],
-    "success_metrics": [
-        "Metric 1 for tracking progress",
-        "Metric 2 for measuring impact",
-        "Metric 3 for evaluating success"
-    ],
+    "immediate_actions": "**Immediate Actions to Take:**\n\n**Action 1:** Specific action with clear steps and timeline\n\n**Action 2:** Specific action with implementation guidance\n\n**Action 3:** Specific action with expected outcomes",
+    "skill_development": "**Priority Skills to Develop:**\n\nSkill1, Skill2, Skill3\n\n**Learning Resources:**\n\n- Resource1\n- Resource2\n- Resource3\n\n**Skill Building Strategy:**\n\nComprehensive plan for acquiring priority skills with specific steps and timeline",
+    "networking_strategy": "**Target Connections:**\n\nConnection type 1, Connection type 2, Connection type 3\n\n**Networking Activities:**\n\n- Activity1\n- Activity2\n- Activity3\n\n**Networking Goals:**\n\nSpecific networking objectives and expected outcomes",
+    "market_positioning": "**Value Proposition:**\n\nClear statement of unique professional value\n\n**Positioning Strategy:**\n\nHow to position yourself in the target market\n\n**Competitive Advantages:**\n\n- Advantage1\n- Advantage2\n- Advantage3",
+    "long_term_roadmap": "**6-Month Milestone:**\n\nSpecific goals and deliverables\n\n**1-Year Milestone:**\n\nMeasurable outcomes and achievements\n\n**2-Year Vision:**\n\nStrategic objectives and career destination",
+    "success_metrics": "**Key Metrics to Track:**\n\n- Metric 1 for tracking progress\n- Metric 2 for measuring impact\n- Metric 3 for evaluating success\n\n**Measurement Strategy:**\n\nHow and when to evaluate these metrics",
     "guidance_notes": "Additional insights and personalized advice, including how any specific user instructions were addressed"
 }}"""
         )

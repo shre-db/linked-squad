@@ -18,6 +18,10 @@ class RoutingAgent:
             user_input=user_input
         )
         response = self.model.invoke(prompt)
+        print(f"\n🧭 ROUTER LLM RESPONSE:")
+        print("=" * 80)
+        print(response.content if hasattr(response, 'content') else str(response))
+        print("=" * 80)
         parsed_response = parse_llm_response(response)
         actions = {
             "CALL_ANALYZE", "CALL_REWRITE", "CALL_JOB_FIT", "CALL_GUIDE",
@@ -41,6 +45,10 @@ class RoutingAgent:
             
             response = self.model.invoke(extraction_prompt)
             response_content = response.content if hasattr(response, 'content') else str(response)
+            print(f"\n🔍 ROUTER INSTRUCTION EXTRACTION LLM RESPONSE:")
+            print("=" * 80)
+            print(response_content)
+            print("=" * 80)
             
             # Parse the LLM response as JSON
             try:
@@ -145,6 +153,10 @@ class RoutingAgent:
             )
             
             response = self.model.invoke(processing_prompt)
+            print(f"\n📝 ROUTER OUTPUT PROCESSING LLM RESPONSE:")
+            print("=" * 80)
+            print(response.content if hasattr(response, 'content') else str(response))
+            print("=" * 80)
             return response.content if hasattr(response, 'content') else str(response)
             
         except Exception as e:

@@ -26,6 +26,8 @@ Conduct a comprehensive job fit analysis covering:
 **Critical Requirements:**
 - Your response MUST be valid JSON only
 - Do not include any text outside the JSON object
+- ALL field values MUST be markdown-formatted strings, NOT nested objects or arrays
+- Use the EXACT format shown below - do not create nested JSON structures
 - Provide specific, actionable recommendations
 - Score each major area objectively (0-100 scale)
 - Identify both strong matches and critical gaps
@@ -35,36 +37,11 @@ Conduct a comprehensive job fit analysis covering:
 {{
     "overall_fit_score": 0,
     "fit_summary": "Comprehensive overview of candidate's alignment with the target role",
-    "skills_analysis": {{
-        "matching_skills": ["skill1", "skill2", "skill3"],
-        "missing_critical_skills": ["missing1", "missing2"],
-        "skills_fit_score": 0,
-        "skills_recommendations": "Specific advice for addressing skill gaps"
-    }},
-    "experience_analysis": {{
-        "relevant_experience_years": 0,
-        "industry_alignment": "Strong/Moderate/Weak",
-        "role_progression_fit": "Strong/Moderate/Weak", 
-        "experience_fit_score": 0,
-        "experience_recommendations": "Specific advice for highlighting relevant experience"
-    }},
-    "qualification_analysis": {{
-        "education_fit": "Strong/Moderate/Weak",
-        "certification_gaps": ["gap1", "gap2"],
-        "qualification_fit_score": 0,
-        "qualification_recommendations": "Specific advice for addressing qualification gaps"
-    }},
-    "competitive_assessment": {{
-        "market_competitiveness": "High/Medium/Low",
-        "unique_value_proposition": "What sets this candidate apart",
-        "competitive_advantages": ["advantage1", "advantage2"],
-        "competitive_gaps": ["gap1", "gap2"]
-    }},
-    "improvement_roadmap": [
-        "Priority 1: Specific action with timeline",
-        "Priority 2: Specific action with implementation steps",
-        "Priority 3: Specific action with expected impact"
-    ],
+    "skills_analysis": "**Matching Skills:**\n\nskill1, skill2, skill3\n\n**Missing Critical Skills:**\n\nmissing1, missing2\n\n**Skills Fit Score:** 0/100\n\n**Skills Recommendations:**\n\nSpecific advice for addressing skill gaps",
+    "experience_analysis": "**Relevant Experience:** 0 years\n\n**Industry Alignment:** Strong/Moderate/Weak\n\n**Role Progression Fit:** Strong/Moderate/Weak\n\n**Experience Fit Score:** 0/100\n\n**Experience Recommendations:**\n\nSpecific advice for highlighting relevant experience",
+    "qualification_analysis": "**Education Fit:** Strong/Moderate/Weak\n\n**Certification Gaps:**\n\n- gap1\n- gap2\n\n**Qualification Fit Score:** 0/100\n\n**Qualification Recommendations:**\n\nSpecific advice for addressing qualification gaps",
+    "competitive_assessment": "**Market Competitiveness:** High/Medium/Low\n\n**Unique Value Proposition:**\n\nWhat sets this candidate apart\n\n**Competitive Advantages:**\n\n- advantage1\n- advantage2\n\n**Competitive Gaps:**\n\n- gap1\n- gap2",
+    "improvement_roadmap": "**Priority Actions:**\n\n**Priority 1:** Specific action with timeline\n\n**Priority 2:** Specific action with implementation steps\n\n**Priority 3:** Specific action with expected impact",
     "evaluation_notes": "Additional insights about the job fit evaluation, including how any specific user instructions were addressed"
 }}"""
         )
