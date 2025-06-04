@@ -1,7 +1,7 @@
 __module_name__ = "profiles"
 
 import json
-from apify_scrapper import linkedin_scraper
+from .apify_scrapper import linkedin_scraper
 
 
 mock_linkedin_urls = {

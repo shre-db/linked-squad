@@ -1,6 +1,7 @@
 import sys
 import os
 import textwrap
+import base64
 # Add the project root to Python path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
@@ -9,9 +10,8 @@ import streamlit as st
 from streamlit_chat import message
 import uuid
 import json
-from backend.orchestrator.state_schema import ProfileBotState
-from backend.orchestrator.langgraph_graph import get_graph_runner
-from linkedin.profiles import get_profile
+import time
+# Delay imports that require API keys until after configuration
 
 # Page configuration
 st.set_page_config(
@@ -21,17 +21,36 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+def _get_profile_bot_state():
+    """Lazy import ProfileBotState to avoid premature initialization"""
+    try:
+        from backend.orchestrator.state_schema import ProfileBotState
+        return ProfileBotState
+    except Exception as e:
+        st.error(f"Error importing ProfileBotState: {e}")
+        return None
+
+def _get_profile_function():
+    """Lazy import get_profile to avoid premature initialization"""
+    try:
+        from linkedin.profiles import get_profile
+        return get_profile
+    except Exception as e:
+        st.error(f"Error importing get_profile: {e}")
+        return None
+
 class LinkedInGenieStreamlit:
     def __init__(self):
         # Initialize session state variables
         if 'session_id' not in st.session_state:
             st.session_state.session_id = str(uuid.uuid4())
         
+        # Only initialize bot_state after API keys are configured
         if 'bot_state' not in st.session_state:
-            st.session_state.bot_state = ProfileBotState(session_id=st.session_state.session_id)
+            st.session_state.bot_state = None
         
         if 'graph_runner' not in st.session_state:
-            st.session_state.graph_runner = get_graph_runner()
+            st.session_state.graph_runner = None
         
         if 'messages' not in st.session_state:
             st.session_state.messages = []
@@ -48,6 +67,9 @@ class LinkedInGenieStreamlit:
         if 'processing' not in st.session_state:
             st.session_state.processing = False
         
+        if 'api_keys_configured' not in st.session_state:
+            st.session_state.api_keys_configured = self._check_existing_api_keys()
+        
         # Apply custom styling
         self._apply_custom_styling()
 
@@ -56,7 +78,6 @@ class LinkedInGenieStreamlit:
         try:
             with open(icon_path, 'r') as f:
                 svg_content = f.read()
-            import base64
             return base64.b64encode(svg_content.encode()).decode()
         except Exception as e:
             print(f"Error loading icon {icon_path}: {e}")
@@ -185,6 +206,174 @@ class LinkedInGenieStreamlit:
         """
         st.markdown(custom_css, unsafe_allow_html=True)
 
+    def _check_existing_api_keys(self):
+        """Check if API keys already exist in .env file and have valid values"""
+        env_path = os.path.join(project_root, '.env')
+        if not os.path.exists(env_path):
+            return False
+        
+        try:
+            with open(env_path, 'r') as f:
+                content = f.read()
+            
+            # Parse the content to extract key-value pairs
+            google_key = None
+            apify_key = None
+            
+            for line in content.split('\n'):
+                line = line.strip()
+                if line.startswith('GOOGLE_API_KEY='):
+                    google_key = line.split('=', 1)[1].strip()
+                elif line.startswith('APIFY_API_TOKEN='):
+                    apify_key = line.split('=', 1)[1].strip()
+            
+            # Validate that both keys exist and are not placeholder values
+            google_valid = (google_key and 
+                          google_key not in ['', 'your_google_api_key_here'] and
+                          len(google_key) > 10)  # Basic length check
+            
+            apify_valid = (apify_key and 
+                         apify_key not in ['', 'your_apify_api_token_here'] and
+                         len(apify_key) > 10)  # Basic length check
+            
+            return google_valid and apify_valid
+            
+        except Exception as e:
+            print(f"Error checking API keys: {e}")
+            return False
+
+    def _save_api_keys(self, google_api_key, apify_api_token):
+        """Save API keys to .env file with improved validation"""
+        # Trim whitespace
+        google_api_key = google_api_key.strip()
+        apify_api_token = apify_api_token.strip()
+        
+        # Basic validation
+        if not google_api_key:
+            st.error("❌ Google API key cannot be empty.")
+            return False
+        
+        if not apify_api_token:
+            st.error("❌ Apify API token cannot be empty.")
+            return False
+        
+        # Check for placeholder values
+        if google_api_key in ['your_google_api_key_here', 'enter_your_key_here']:
+            st.error("❌ Please provide a valid Google API key (not placeholder text).")
+            return False
+        
+        if apify_api_token in ['your_apify_api_token_here', 'enter_your_token_here']:
+            st.error("❌ Please provide a valid Apify API token (not placeholder text).")
+            return False
+        
+        # Basic length validation
+        if len(google_api_key) < 10:
+            st.error("❌ Google API key appears to be too short. Please check your key.")
+            return False
+        
+        if len(apify_api_token) < 10:
+            st.error("❌ Apify API token appears to be too short. Please check your token.")
+            return False
+        
+        # Save to .env file
+        env_path = os.path.join(project_root, '.env')
+        env_content = f"""# Google Gemini API key
+GOOGLE_API_KEY={google_api_key}
+
+# APIFY settings
+APIFY_API_TOKEN={apify_api_token}
+"""
+        try:
+            with open(env_path, 'w') as f:
+                f.write(env_content)
+            
+            # Reload environment variables
+            try:
+                from dotenv import load_dotenv
+                load_dotenv(override=True)
+                
+                # Verify the keys were loaded into environment
+                if not (os.getenv('GOOGLE_API_KEY') and os.getenv('APIFY_API_TOKEN')):
+                    st.warning("⚠️ API keys saved but may not be loaded into environment yet.")
+                    
+            except ImportError:
+                st.info("💡 API keys saved. You may need to restart the app to load them.")
+            
+            return True
+            
+        except Exception as e:
+            st.error(f"❌ Failed to save API keys: {str(e)}")
+            return False
+
+    def _display_api_config_screen(self):
+        """Display API key configuration screen"""
+        st.markdown("## 🔑 API Configuration Required")
+        st.markdown("Welcome to LinkedIn Assistant! To get started, please provide your API keys below.")
+        
+        # Add some spacing and instructions
+        st.markdown("---")
+        
+        with st.container():
+            st.markdown("### Required API Keys")
+            st.markdown("Both API keys are required for the assistant to function properly:")
+            
+            st.markdown("#### 1. Google Gemini API Key")
+            st.markdown("• Visit [Google AI Studio](https://makersuite.google.com/app/apikey) to get your free API key")
+            st.markdown("• This is used to power the AI conversation and analysis")
+            
+            google_api_key = st.text_input(
+                "Google API Key",
+                type="password",
+                placeholder="Enter your Google Gemini API key...",
+                key="google_api_input",
+                help="Your Google Gemini API key from AI Studio"
+            )
+            
+            st.markdown("#### 2. Apify API Token")
+            st.markdown("• Visit [Apify Console](https://console.apify.com/account/integrations) to get your API token")
+            st.markdown("• This is used to scrape LinkedIn profile data")
+            
+            apify_api_token = st.text_input(
+                "Apify API Token",
+                type="password",
+                placeholder="Enter your Apify API token...",
+                key="apify_api_input",
+                help="Your Apify API token from the Console"
+            )
+            
+            st.markdown("---")
+            
+            # Save button with better styling
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                if st.button("💾 Save API Keys & Continue", type="primary", use_container_width=True):
+                    if google_api_key and apify_api_token:
+                        if self._save_api_keys(google_api_key, apify_api_token):
+                            st.session_state.api_keys_configured = True
+                            st.success("✅ API keys saved successfully! Loading assistant...")
+                            # Small delay to show success message before rerun
+                            time.sleep(1)
+                            st.rerun()
+                    else:
+                        st.warning("⚠️ Please provide both API keys to continue.")
+            
+            # Add helpful information
+            st.markdown("---")
+            with st.expander("ℹ️ Why do we need these API keys?", expanded=False):
+                st.markdown("""
+                **Google Gemini API Key:**
+                - Powers the AI conversation and profile analysis
+                - Provides intelligent career guidance and content suggestions
+                - Free tier available with generous usage limits
+                
+                **Apify API Token:**
+                - Enables scraping of LinkedIn profile data
+                - Required to analyze your LinkedIn profile
+                - Free tier includes limited scraping credits
+                
+                **Security Note:** Your API keys are stored locally in a `.env` file and are not shared with anyone.
+                """)
+
     def _format_structured_data(self, data, title):
         """Format structured data for display in the sidebar"""
         if not data:
@@ -244,6 +433,11 @@ class LinkedInGenieStreamlit:
             else:
                 st.header("📊 Profile Information")
             
+            # Only display if bot_state is initialized
+            if st.session_state.bot_state is None:
+                st.info("Initializing assistant...")
+                return
+            
             # Display LinkedIn profile info
             if st.session_state.bot_state.linkedin_data:
                 profile = st.session_state.bot_state.linkedin_data
@@ -293,14 +487,35 @@ class LinkedInGenieStreamlit:
                     )
                     st.markdown(formatted)
 
+    def _initialize_graph_runner(self):
+        """Initialize the graph runner with proper error handling"""
+        if st.session_state.graph_runner is None:
+            try:
+                # Import only when needed to avoid premature initialization
+                from backend.orchestrator.langgraph_graph import get_graph_runner
+                st.session_state.graph_runner = get_graph_runner()
+                return True
+            except Exception as e:
+                st.error(f"❌ Error initializing the assistant: {str(e)}")
+                st.error("Please check your API keys and try again.")
+                return False
+        return True
+
     def _process_user_input(self, user_input):
         """Process user input through the graph runner"""
+        # Initialize graph runner if not already done (after API keys are configured)
+        if not self._initialize_graph_runner():
+            return "Failed to initialize the assistant. Please check your API keys."
+        
         # Check if user provided a LinkedIn URL
         if "linkedin.com/in/" in user_input:
-            st.session_state.bot_state.linkedin_url = user_input
-            # st.session_state.bot_state.linkedin_data = get_mock_profile(linkedin_url=user_input)
-            st.session_state.bot_state.linkedin_data = get_profile(linkedin_url=user_input)
-            st.session_state.linkedin_profile_loaded = True
+            get_profile = _get_profile_function()
+            if get_profile:
+                st.session_state.bot_state.linkedin_url = user_input
+                st.session_state.bot_state.linkedin_data = get_profile(linkedin_url=user_input)
+                st.session_state.linkedin_profile_loaded = True
+            else:
+                return "Error: Could not load profile scraping function. Please check your setup."
             
         # Update state with user input
         st.session_state.bot_state.user_input = user_input
@@ -315,7 +530,11 @@ class LinkedInGenieStreamlit:
                 st.session_state.bot_state.model_dump(),
                 config={"configurable": {"thread_id": st.session_state.bot_state.session_id}},
             )
-            st.session_state.bot_state = ProfileBotState.model_validate(updated_state_dict)
+            ProfileBotState = _get_profile_bot_state()
+            if ProfileBotState:
+                st.session_state.bot_state = ProfileBotState.model_validate(updated_state_dict)
+            else:
+                return "Error: Could not load bot state. Please check your setup."
             
             # Get bot response
             bot_response = st.session_state.bot_state.current_bot_response or "I'm processing your request..."
@@ -337,8 +556,43 @@ class LinkedInGenieStreamlit:
             })
             return error_msg
 
+    def _initialize_bot_state_if_needed(self):
+        """Initialize bot state after API keys are configured"""
+        if st.session_state.bot_state is None and st.session_state.api_keys_configured:
+            ProfileBotState = _get_profile_bot_state()
+            if ProfileBotState:
+                st.session_state.bot_state = ProfileBotState(session_id=st.session_state.session_id)
+                return True
+            else:
+                st.error("❌ Failed to initialize bot state. Please check your configuration.")
+                return False
+        return True
+
     def run(self):
         """Main Streamlit app interface"""
+        # Check if API keys are configured
+        if not st.session_state.api_keys_configured:
+            self._display_api_config_screen()
+            return
+        
+        # Test API keys if they were just configured
+        if st.session_state.api_keys_configured and 'api_keys_tested' not in st.session_state:
+            with st.spinner("Testing API keys..."):
+                is_valid, message = self._test_api_keys()
+                if not is_valid:
+                    st.error(f"❌ API key validation failed: {message}")
+                    st.error("Please check your API keys and restart the app.")
+                    if st.button("🔄 Reconfigure API Keys"):
+                        st.session_state.api_keys_configured = False
+                        st.rerun()
+                    return
+                else:
+                    st.session_state.api_keys_tested = True
+        
+        # Initialize bot state if needed
+        if not self._initialize_bot_state_if_needed():
+            return
+        
         # Load LinkedIn logo for title
         linkedin_icon_path = os.path.join(project_root, "assets", "linkedin-logo.svg")
         linkedin_icon_b64 = self._load_svg_icon(linkedin_icon_path)
@@ -603,10 +857,32 @@ class LinkedInGenieStreamlit:
         """
         title_placeholder.markdown(final_html_clean, unsafe_allow_html=True)
 
+    def _test_api_keys(self):
+        """Test if the configured API keys are working"""
+        try:
+            # Test Google API key
+            google_key = os.getenv('GOOGLE_API_KEY')
+            apify_key = os.getenv('APIFY_API_TOKEN')
+            
+            if not google_key or not apify_key:
+                return False, "API keys not found in environment"
+            
+            # Basic format check for Google API key
+            if not google_key.startswith('AI') or len(google_key) < 30:
+                return False, "Google API key format appears invalid"
+            
+            # Basic format check for Apify token
+            if len(apify_key) < 20:
+                return False, "Apify API token format appears invalid"
+            
+            return True, "API keys appear valid"
+            
+        except Exception as e:
+            return False, f"Error testing API keys: {str(e)}"
+
 def main():
     app = LinkedInGenieStreamlit()
     app.run()
 
 if __name__ == "__main__":
     main()
-    
