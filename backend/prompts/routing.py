@@ -123,6 +123,10 @@ Based on current completion status, guide users to next logical step:
 
 **RESPONSE REQUIREMENTS:**
 - Output valid JSON only
+- Do not include any text outside the JSON object
+- Do not wrap the JSON in markdown code blocks
+- Do not add explanatory text before or after the JSON
+- Ensure all strings are properly escaped (use \\" for quotes within strings)
 - Provide clear, conversational responses
 - Choose one action per response based on intelligent analysis
 - Update state flags appropriately
@@ -208,6 +212,11 @@ User's Specific Instructions: {user_instructions}
 - **SHOW INTELLIGENCE**: Your responses should reflect deep understanding of both the output and the user's optimization journey
 
 **RESPONSE REQUIREMENTS:**
+- Output valid JSON only
+- Do not include any text outside the JSON object
+- Do not wrap the JSON in markdown code blocks
+- Do not add explanatory text before or after the JSON
+- Ensure all strings are properly escaped (use \\" for quotes within strings)
 - Be conversational and natural, never technical or robotic
 - Highlight key insights from the agent output without overwhelming detail
 - Always acknowledge user instructions that were followed

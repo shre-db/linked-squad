@@ -27,6 +27,9 @@ Provide comprehensive career guidance covering:
 **Critical Requirements:**
 - Your response MUST be valid JSON only
 - Do not include any text outside the JSON object
+- Do not wrap the JSON in markdown code blocks
+- Do not add explanatory text before or after the JSON
+- Ensure all strings are properly escaped (use \\" for quotes within strings)
 - Provide specific, actionable recommendations
 - Base advice on profile strengths and market realities
 - Include both immediate and long-term strategies

@@ -7,7 +7,7 @@ import os
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-def get_chat_model(temperature: float = 0.7) -> ChatGoogleGenerativeAI:
+def get_chat_model(temperature: float = 0.3) -> ChatGoogleGenerativeAI:
     if not GOOGLE_API_KEY:
         raise ValueError("GOOGLE_API_KEY not found. Check your .env file.")
     try:

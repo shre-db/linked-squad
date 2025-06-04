@@ -24,13 +24,15 @@ Conduct a thorough evaluation covering:
 
 **Critical Requirements:**
 - Your response MUST be ONLY valid JSON - no other text before or after
+- Do not wrap the JSON in markdown code blocks
+- Do not add explanatory text before or after the JSON
+- Ensure all strings are properly escaped (use \\" for quotes within strings)
 - Use proper JSON syntax with correct commas, quotes, and brackets
 - Keep string values concise to avoid token limits
 - Ensure all arrays and objects are properly closed
 - Double-check your JSON syntax before responding
 
 **Output Format - Respond with ONLY this JSON structure:**
-```json
 {{
     "analysis_summary": "Brief overview of profile strengths and key improvement areas",
     "strengths": "**Key Strengths:**\n\n- Specific strength 1\n- Specific strength 2\n- Specific strength 3",
@@ -41,7 +43,6 @@ Conduct a thorough evaluation covering:
     "priority_actions": "**Top Priority Actions:**\n\n**Action 1:** Highest priority action\n\n**Action 2:** Second priority action\n\n**Action 3:** Third priority action",
     "analysis_notes": "Additional insights and personalized recommendations"
 }}
-```
 
 Remember: Return ONLY the JSON object above with your analysis data. No explanatory text, no markdown formatting, just the raw JSON."""
         )

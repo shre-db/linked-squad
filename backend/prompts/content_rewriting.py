@@ -27,6 +27,9 @@ Generate optimized rewrite suggestions for LinkedIn profile sections. Focus on:
 **Critical Requirements:**
 - Your response MUST be valid JSON only
 - Do not include any text outside the JSON object
+- Do not wrap the JSON in markdown code blocks
+- Do not add explanatory text before or after the JSON
+- Ensure all strings are properly escaped (use \\" for quotes within strings)
 - Generate up to 3 suggestions for summary section and 2 for experience sections
 - Each suggestion should be a complete, ready-to-use text block
 - Base suggestions on the profile analysis insights provided

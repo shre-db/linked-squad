@@ -26,6 +26,9 @@ Conduct a comprehensive job fit analysis covering:
 **Critical Requirements:**
 - Your response MUST be valid JSON only
 - Do not include any text outside the JSON object
+- Do not wrap the JSON in markdown code blocks
+- Do not add explanatory text before or after the JSON
+- Ensure all strings are properly escaped (use \\" for quotes within strings)
 - ALL field values MUST be markdown-formatted strings, NOT nested objects or arrays
 - Use the EXACT format shown below - do not create nested JSON structures
 - Provide specific, actionable recommendations
