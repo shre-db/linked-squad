@@ -88,6 +88,9 @@ class LinkedInGenieStreamlit:
         if 'api_keys_configured' not in st.session_state:
             st.session_state.api_keys_configured = self._check_existing_api_keys()
         
+        if 'show_logout_dialog' not in st.session_state:
+            st.session_state.show_logout_dialog = False
+        
         # Apply custom styling
         self._apply_custom_styling()
 
@@ -461,7 +464,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                 st.markdown("")
                 
                 # Save button with better styling - make it more prominent
-                if st.button("Save API Key & Continue", type="primary", use_container_width=False, icon=":material/save:"):
+                if st.button("Save API Key & Login", type="primary", use_container_width=False, icon=":material/save:"):
                     # For now, we only need Google API key since we're using mock profiles
                     if google_api_key:
                         if self._save_api_keys(google_api_key, apify_api_token):
@@ -485,7 +488,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                     - Provides intelligent career guidance and content suggestions
                     - Free tier available with generous usage limits
                     
-                    **Note:** We're currently using mock LinkedIn profiles for testing, so no Apify token is needed at this time.
+                    **Note:** We're currently using mock / downloaded LinkedIn profiles for demonstration, so no Apify token is needed at this time.
                     
                     **Security Note:** Your API key is stored locally in a `.env` file and is not shared with anyone.
                     """)
@@ -614,6 +617,62 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                     if 'keys_loaded_message_shown' in st.session_state:
                         del st.session_state.keys_loaded_message_shown
                     st.rerun()
+                
+                st.markdown("")
+                st.markdown("**Session Management**")
+                if st.button("Logout & Clear Data", help="Clear all data and API keys, then restart", use_container_width=True, type="secondary", icon=":material/logout:"):
+                    st.session_state.show_logout_dialog = True
+                    st.rerun()
+
+    def _clear_all_data(self):
+        """Clear all session data and API keys for security"""
+        import os
+        
+        # Clear .env file if it exists
+        env_path = os.path.join(project_root, '.env')
+        if os.path.exists(env_path):
+            try:
+                os.remove(env_path)
+            except Exception as e:
+                st.error(f"Error removing .env file: {e}")
+        
+        # Clear environment variables
+        os.environ.pop('GOOGLE_API_KEY', None)
+        os.environ.pop('APIFY_API_TOKEN', None)
+        
+        # Clear all session state
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+    
+    def _show_logout_dialog(self):
+        """Show logout confirmation dialog"""
+        @st.dialog("Confirm Logout")
+        def logout_confirmation():
+            st.warning("**Are you sure you want to logout?**", icon=":material/warning:")
+            
+            st.markdown("This will:")
+            st.markdown("- Clear all your session data")
+            st.markdown("- Remove stored API keys from your device")
+            st.markdown("- Clear conversation history")
+            st.markdown("- Clear profile data")
+            st.markdown("- Restart the application")
+            
+            st.markdown("")
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                if st.button("Cancel", use_container_width=True):
+                    st.session_state.show_logout_dialog = False
+                    st.rerun()
+            
+            with col2:
+                if st.button("Yes, Logout", type="primary", use_container_width=True):
+                    self._clear_all_data()
+                    st.success("Data cleared successfully! Restarting...", icon=":material/check_circle:")
+                    time.sleep(2)  # Brief delay to show success message
+                    st.rerun()
+        
+        logout_confirmation()
 
     def _initialize_graph_runner(self):
         """Initialize the graph runner with proper error handling"""
@@ -702,6 +761,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
 
     def run(self):
         """Main Streamlit app interface"""
+        # Handle logout dialog
+        if st.session_state.get('show_logout_dialog', False):
+            self._show_logout_dialog()
+            return
+        
         # Check if API keys are configured
         if not st.session_state.api_keys_configured:
             self._display_api_config_screen()
