@@ -1,6 +1,7 @@
-__module_name__ = "mock_profiles"
+__module_name__ = "profiles"
 
 import json
+from apify_scrapper import linkedin_scraper
 
 
 mock_linkedin_urls = {
@@ -73,6 +74,51 @@ def get_mock_profile(linkedin_url: str) -> dict:
     elif "janedoe" in linkedin_url:
         return profile_d
     else:
+        return {
+            "name": "Unknown User",
+            "about": "No profile information available.",
+            "experience": [],
+            "skills": []
+        }
+
+def get_profile(linkedin_url: str, linkedin_name: str) -> dict:
+    """
+    Loads a LinkedIn profile from a mock JSON file or scrapes it if not available.
+    
+    Args:
+        linkedin_url (str): The LinkedIn profile URL.
+        
+    Returns:
+        dict: Profile data.
+    """
+    if not linkedin_url:
+        raise ValueError("LinkedIn URL cannot be empty.")
+    
+    # List all json files in the linkedin directory
+    import os
+    linkedin_dir = "linkedin"
+    json_files = [f for f in os.listdir(linkedin_dir) if f.endswith('.json')]
+
+    # Check if the profile already exists in the mock directory
+    for file in json_files:
+        if linkedin_name in file:
+            try:
+                with open(os.path.join(linkedin_dir, file), "r") as f:
+                    profile_data = json.load(f)
+                    print(f"File exists locally! Loading... : {file}")
+                return profile_data
+            except Exception as e:
+                print(f"Error loading profile from file: {e}")
+                return get_mock_profile(linkedin_url)
+    # If not found, scrape the profile
+    try:
+        linkedin_name = linkedin_url.split("/")[-2]
+        linkedin_scraper(linkedin_url, linkedin_name=linkedin_name)
+        with open(f"linkedin/mock_profile_{linkedin_name}.json", "r") as f:
+            profile_data = json.load(f)
+        return profile_data
+    except Exception as e:
+        print(f"Error fetching profile: {e}")
         return {
             "name": "Unknown User",
             "about": "No profile information available.",

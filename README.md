@@ -3,6 +3,15 @@
 > **An AI-powered career assistant that transforms your LinkedIn profile, evaluates job fit, and guides your job search with smart, personalized insights.**
 
 
+TODO:
+1. Improve UI for data clearance, API keys, and other configurations
+2. Deploy on Streamlit
+3. Add Docker support
+4. Add Apify integration for LinkedIn scraping
+5. Review and optimize code structure
+
+
+
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3.25-green.svg)](https://langchain.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.4.7-purple.svg)](https://langgraph.com)

@@ -11,7 +11,7 @@ import uuid
 import json
 from backend.orchestrator.state_schema import ProfileBotState
 from backend.orchestrator.langgraph_graph import get_graph_runner
-from linkedin.mock_profiles import get_mock_profile
+from linkedin.profiles import get_profile
 
 # Page configuration
 st.set_page_config(
@@ -298,7 +298,8 @@ class LinkedInGenieStreamlit:
         # Check if user provided a LinkedIn URL
         if "linkedin.com/in/" in user_input:
             st.session_state.bot_state.linkedin_url = user_input
-            st.session_state.bot_state.linkedin_data = get_mock_profile(linkedin_url=user_input)
+            # st.session_state.bot_state.linkedin_data = get_mock_profile(linkedin_url=user_input)
+            st.session_state.bot_state.linkedin_data = get_profile(linkedin_url=user_input)
             st.session_state.linkedin_profile_loaded = True
             
         # Update state with user input
@@ -608,3 +609,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

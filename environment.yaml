@@ -18,3 +18,4 @@ dependencies:
       - langgraph
       - langchain-google-genai
       - streamlit-chat
+      - apify-client
