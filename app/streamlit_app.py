@@ -21,6 +21,11 @@ import json
 import time
 # Delay imports that require API keys until after configuration
 
+# from app.ui_utils import load_svg_icon
+
+# gear_icon_path = os.path.join(project_root, "assets", "gear-light.svg")
+# settings_icon = load_svg_icon(gear_icon_path)
+
 # Page configuration
 st.set_page_config(
     page_title="LinkedIn Assistant",
@@ -402,7 +407,7 @@ APIFY_API_TOKEN={apify_api_token}
             
             # Add helpful information
             st.markdown("---")
-            with st.expander("ℹ️ Why do we need these API keys?", expanded=False):
+            with st.expander("Why do we need these API keys?", expanded=False, icon=":material/info:"):
                 st.markdown("""
                 **Google Gemini API Key:**
                 - Powers the AI conversation and profile analysis
@@ -440,14 +445,12 @@ APIFY_API_TOKEN={apify_api_token}
                     section_title = section.replace('_', ' ').title()
                     formatted += f"**{section_title}:** {content}\n\n"
                 elif isinstance(content, list):
-                    # Handle any remaining lists (though these should be rare now)
                     section_title = section.replace('_', ' ').title()
                     formatted += f"**{section_title}:**\n"
                     for item in content:
                         formatted += f"- {item}\n"
                     formatted += "\n"
                 elif isinstance(content, dict):
-                    # Handle any remaining nested dicts (though these should be rare now)
                     section_title = section.replace('_', ' ').title()
                     formatted += f"**{section_title}:**\n"
                     for key, value in content.items():
@@ -532,9 +535,9 @@ APIFY_API_TOKEN={apify_api_token}
             
             # Add settings section
             st.markdown("---")
-            with st.expander("⚙️ Settings", expanded=False):
+            with st.expander("Settings", expanded=False, icon=":material/settings:"):
                 st.markdown("**API Configuration**")
-                if st.button("🔄 Reconfigure API Keys", help="Update your API keys", use_container_width=True):
+                if st.button("Reconfigure API Keys", help="Update your API keys", use_container_width=True, icon=":material/autorenew:"):
                     # Clear API key configuration to force reconfiguration
                     st.session_state.api_keys_configured = False
                     if 'api_keys_tested' in st.session_state:
@@ -638,7 +641,7 @@ APIFY_API_TOKEN={apify_api_token}
         # Show confirmation when keys are loaded from existing .env (only once)
         if st.session_state.api_keys_configured and 'keys_loaded_message_shown' not in st.session_state:
             if os.path.exists(os.path.join(project_root, '.env')):
-                st.success("✅ API keys loaded from existing configuration!")
+                st.success("API keys loaded from existing configuration!", icon=":material/check_circle:")
             st.session_state.keys_loaded_message_shown = True
         
         # Test API keys if they were just configured
