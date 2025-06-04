@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import textwrap
 import base64
 # Add the project root to Python path
@@ -15,7 +16,6 @@ except ImportError:
     pass
 
 import streamlit as st
-from streamlit_chat import message
 import uuid
 import json
 import time
@@ -41,8 +41,8 @@ def _get_profile_bot_state():
 def _get_profile_function():
     """Lazy import get_profile to avoid premature initialization"""
     try:
-        from linkedin.profiles import get_profile
-        return get_profile
+        from linkedin.profiles import get_mock_profile
+        return get_mock_profile
     except Exception as e:
         st.error(f"Error importing get_profile: {e}")
         return None
@@ -560,10 +560,14 @@ APIFY_API_TOKEN={apify_api_token}
         
         # Check if user provided a LinkedIn URL
         if "linkedin.com/in/" in user_input:
-            get_profile = _get_profile_function()
-            if get_profile:
+            get_mock_profile = _get_profile_function()
+            if get_mock_profile:
                 st.session_state.bot_state.linkedin_url = user_input
-                st.session_state.bot_state.linkedin_data = get_profile(linkedin_url=user_input)
+                # Parse linked URL from user_input starting with https://
+                # Extract the LinkedIn URL from user_input (handles cases where user pastes extra text)
+                match = re.search(r"(https?://[^\s]+linkedin\.com/in/[^\s]+)", user_input)
+                parsed_url = match.group(1) if match else user_input
+                st.session_state.bot_state.linkedin_data = get_mock_profile(linkedin_url=parsed_url)
                 st.session_state.linkedin_profile_loaded = True
             else:
                 return "Error: Could not load profile scraping function. Please check your setup."
@@ -784,9 +788,11 @@ APIFY_API_TOKEN={apify_api_token}
         with chat_container:
             for i, msg in enumerate(st.session_state.messages):
                 if msg["role"] == "user":
-                    message(msg["content"], is_user=True, key=f"user_{i}")
+                    with st.chat_message("user"):
+                        st.write(msg["content"])
                 else:
-                    message(msg["content"], is_user=False, key=f"bot_{i}")
+                    with st.chat_message("assistant"):
+                        st.write(msg["content"])
         
         # Handle pending message processing AFTER chat messages are displayed
         if st.session_state.pending_message and not st.session_state.processing:
