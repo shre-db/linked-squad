@@ -9,7 +9,7 @@ mock_linkedin_urls = {
     "alicejohnson": "https://www.linkedin.com/in/alicejohnson",
     "boblee": "https://www.linkedin.com/in/boblee",
     "janedoe": "https://www.linkedin.com/in/janedoe",
-    "shreyasbangera": "https://www.linkedin.com/in/shreyas-bangera-ml/",
+    "arjunsrivastava": "https://www.linkedin.com/in/arjun-srivastava-ml/",
 }
     
 
@@ -63,7 +63,7 @@ except FileNotFoundError:
 
 
 def get_mock_profile(linkedin_url: str) -> dict:
-    if "shreyas-bangera-ml" in linkedin_url:
+    if "arjun-srivastava-ml" in linkedin_url:
         return mock_profile
     elif "johnsmith" in linkedin_url:
         return profile_a
