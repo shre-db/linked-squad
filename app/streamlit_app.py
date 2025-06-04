@@ -228,14 +228,15 @@ class LinkedInGenieStreamlit:
         """Check if API keys already exist and are valid"""
         # First check environment variables (they might be loaded from .env)
         google_key = os.getenv('GOOGLE_API_KEY')
-        apify_key = os.getenv('APIFY_API_TOKEN')
+        # apify_key = os.getenv('APIFY_API_TOKEN')  # Commented out for now
         
         # If found in environment, validate them
-        if google_key and apify_key:
+        # For now, only require Google API key since we're using mock profiles
+        if google_key:
             google_valid = (google_key not in ['', 'your_google_api_key_here'] and len(google_key) > 10)
-            apify_valid = (apify_key not in ['', 'your_apify_api_token_here'] and len(apify_key) > 10)
+            # apify_valid = (apify_key not in ['', 'your_apify_api_token_here'] and len(apify_key) > 10)
             
-            if google_valid and apify_valid:
+            if google_valid:  # and apify_valid (commented out)
                 return True
         
         # If not in environment, check .env file directly
@@ -249,26 +250,27 @@ class LinkedInGenieStreamlit:
             
             # Parse the content to extract key-value pairs
             google_key = None
-            apify_key = None
+            # apify_key = None  # Commented out for now
             
             for line in content.split('\n'):
                 line = line.strip()
                 if line.startswith('GOOGLE_API_KEY='):
                     google_key = line.split('=', 1)[1].strip()
-                elif line.startswith('APIFY_API_TOKEN='):
-                    apify_key = line.split('=', 1)[1].strip()
+                # elif line.startswith('APIFY_API_TOKEN='):  # Commented out for now
+                #     apify_key = line.split('=', 1)[1].strip()
             
-            # Validate that both keys exist and are not placeholder values
+            # Validate that Google key exists and is not placeholder value
             google_valid = (google_key and 
                           google_key not in ['', 'your_google_api_key_here'] and
                           len(google_key) > 10)  # Basic length check
             
-            apify_valid = (apify_key and 
-                         apify_key not in ['', 'your_apify_api_token_here'] and
-                         len(apify_key) > 10)  # Basic length check
+            # Commented out Apify validation for now
+            # apify_valid = (apify_key and 
+            #              apify_key not in ['', 'your_apify_api_token_here'] and
+            #              len(apify_key) > 10)  # Basic length check
             
-            # If keys are valid in file, reload environment
-            if google_valid and apify_valid:
+            # If Google key is valid in file, reload environment
+            if google_valid:  # and apify_valid (commented out)
                 try:
                     from dotenv import load_dotenv
                     load_dotenv(env_path, override=True)
@@ -276,7 +278,7 @@ class LinkedInGenieStreamlit:
                 except ImportError:
                     # Set environment variables manually if dotenv not available
                     os.environ['GOOGLE_API_KEY'] = google_key
-                    os.environ['APIFY_API_TOKEN'] = apify_key
+                    # os.environ['APIFY_API_TOKEN'] = apify_key  # Commented out for now
                     return True
             
             return False
@@ -285,46 +287,50 @@ class LinkedInGenieStreamlit:
             print(f"Error checking API keys: {e}")
             return False
 
-    def _save_api_keys(self, google_api_key, apify_api_token):
+    def _save_api_keys(self, google_api_key, apify_api_token=""):
         """Save API keys to .env file with improved validation"""
         # Trim whitespace
         google_api_key = google_api_key.strip()
-        apify_api_token = apify_api_token.strip()
+        apify_api_token = apify_api_token.strip() if apify_api_token else ""
         
-        # Basic validation
+        # Basic validation for Google API key (required)
         if not google_api_key:
             st.error("❌ Google API key cannot be empty.")
             return False
         
-        if not apify_api_token:
-            st.error("❌ Apify API token cannot be empty.")
-            return False
+        # Commented out Apify validation since we're using mock profiles
+        # if not apify_api_token:
+        #     st.error("❌ Apify API token cannot be empty.")
+        #     return False
         
         # Check for placeholder values
         if google_api_key in ['your_google_api_key_here', 'enter_your_key_here']:
             st.error("❌ Please provide a valid Google API key (not placeholder text).")
             return False
         
-        if apify_api_token in ['your_apify_api_token_here', 'enter_your_token_here']:
-            st.error("❌ Please provide a valid Apify API token (not placeholder text).")
-            return False
+        # Commented out Apify placeholder validation
+        # if apify_api_token in ['your_apify_api_token_here', 'enter_your_token_here']:
+        #     st.error("❌ Please provide a valid Apify API token (not placeholder text).")
+        #     return False
         
-        # Basic length validation
+        # Basic length validation for Google API key
         if len(google_api_key) < 10:
             st.error("❌ Google API key appears to be too short. Please check your key.")
             return False
         
-        if len(apify_api_token) < 10:
-            st.error("❌ Apify API token appears to be too short. Please check your token.")
-            return False
+        # Commented out Apify length validation
+        # if len(apify_api_token) < 10:
+        #     st.error("❌ Apify API token appears to be too short. Please check your token.")
+        #     return False
         
         # Save to .env file
         env_path = os.path.join(project_root, '.env')
+        # Include Apify token (even if empty) to maintain compatibility
         env_content = f"""# Google Gemini API key
 GOOGLE_API_KEY={google_api_key}
 
-# APIFY settings
-APIFY_API_TOKEN={apify_api_token}
+# APIFY settings (currently using mock profiles)
+APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_here'}
 """
         try:
             with open(env_path, 'w') as f:
@@ -336,11 +342,12 @@ APIFY_API_TOKEN={apify_api_token}
                 load_dotenv(override=True)
                 
                 # Verify the keys were loaded into environment
-                if not (os.getenv('GOOGLE_API_KEY') and os.getenv('APIFY_API_TOKEN')):
-                    st.warning("⚠️ API keys saved but may not be loaded into environment yet.")
+                # For now, only check Google API key since Apify is not required
+                if not os.getenv('GOOGLE_API_KEY'):
+                    st.warning("⚠️ Google API key saved but may not be loaded into environment yet.")
                     
             except ImportError:
-                st.info("💡 API keys saved. You may need to restart the app to load them.")
+                st.info("💡 API key saved. You may need to restart the app to load it.")
             
             return True
             
@@ -350,77 +357,138 @@ APIFY_API_TOKEN={apify_api_token}
 
     def _display_api_config_screen(self):
         """Display API key configuration screen"""
-        st.markdown("## 🔑 API Configuration Required")
-        st.markdown("Welcome to LinkedIn Assistant! To get started, please provide your API keys below.")
+        # Load LinkedIn logo for banner
+        linkedin_icon_path = os.path.join(project_root, "assets", "linkedin-logo.svg")
+        key_icon_path = os.path.join(project_root, "assets", "key-duotone.svg")
+        linkedin_icon_b64 = self._load_svg_icon(linkedin_icon_path)
+        key_icon_b64 = self._load_svg_icon(key_icon_path)
+
+        # LinkedIn Assistant Banner (same as main interface)
+        if linkedin_icon_b64:
+            title_html = f"""
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <img src="data:image/svg+xml;base64,{linkedin_icon_b64}" 
+                     style="width: 40px; height: 40px; margin-right: 12px;" 
+                     alt="LinkedIn logo">
+                <h1 style="margin: 0; font-family: 'Nunito Sans', sans-serif; font-weight: 700; font-size: 2.5rem; color: #0A66C2;">
+                    LinkedIn Assistant
+                </h1>
+            </div>
+            """
+            st.markdown(title_html, unsafe_allow_html=True)
+        else:
+            # Fallback to emoji if icon can't be loaded
+            st.title("💼 LinkedIn Assistant")
         
-        # Check if .env file exists but keys are invalid
-        env_path = os.path.join(project_root, '.env')
-        if os.path.exists(env_path):
-            st.info("ℹ️ Found existing .env file, but API keys need to be updated or are invalid.")
+        st.markdown("Your AI-powered career advisor for LinkedIn optimization")
         
-        # Add some spacing and instructions
+        # Divider between banner and authentication section
         st.markdown("---")
         
+        # API Configuration section (centered)
         with st.container():
-            st.markdown("### Required API Keys")
-            st.markdown("Both API keys are required for the assistant to function properly:")
-            
-            st.markdown("#### 1. Google Gemini API Key")
-            st.markdown("• Visit [Google AI Studio](https://makersuite.google.com/app/apikey) to get your free API key")
-            st.markdown("• This is used to power the AI conversation and analysis")
-            
-            google_api_key = st.text_input(
-                "Google API Key",
-                type="password",
-                placeholder="Enter your Google Gemini API key...",
-                key="google_api_input",
-                help="Your Google Gemini API key from AI Studio"
-            )
-            
-            st.markdown("#### 2. Apify API Token")
-            st.markdown("• Visit [Apify Console](https://console.apify.com/account/integrations) to get your API token")
-            st.markdown("• This is used to scrape LinkedIn profile data")
-            
-            apify_api_token = st.text_input(
-                "Apify API Token",
-                type="password",
-                placeholder="Enter your Apify API token...",
-                key="apify_api_input",
-                help="Your Apify API token from the Console"
-            )
-            
-            st.markdown("---")
-            
-            # Save button with better styling
-            col1, col2, col3 = st.columns([1, 2, 1])
+            col1, col2, col3 = st.columns([1, 3, 1])
             with col2:
-                if st.button("💾 Save API Keys & Continue", type="primary", use_container_width=True):
-                    if google_api_key and apify_api_token:
+                config_req_html = f"""
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <img src="data:image/svg+xml;base64,{key_icon_b64}" 
+                        style="width: 40px; height: 40px; margin-right: 12px;" 
+                        alt="API key icon">
+                    <h3 style="margin: 0; font-family: 'Nunito Sans', sans-serif; font-weight: 500; font-size: 2.0rem; color: #000000;">
+                        API Configuration Required
+                    </h3>
+                </div>
+                """
+                st.markdown(config_req_html, unsafe_allow_html=True)
+                st.markdown("Welcome! To get started with your AI career assistant, please provide your API key below.")
+                # Check if .env file exists but keys are invalid
+                env_path = os.path.join(project_root, '.env')
+                if os.path.exists(env_path):
+                    st.info("Found existing .env file, but API keys need to be updated or are invalid.", icon=":material/info:")
+
+        st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
+        
+        with st.container():
+            # Create centered columns for better layout
+            col1, col2, col3 = st.columns([1, 3, 1])
+            with col2:
+                # st.markdown("### Required API Key")
+                # st.markdown("Google API key is required for the assistant to function properly:")
+                
+                # Add spacing before first API key section
+                st.markdown("")
+
+                gemini_key_html = f"""
+                <div style="display: flex; align-items: center; margin-bottom: 0.3rem;">
+                    <h3 style="margin: 0; font-family: 'Nunito Sans', sans-serif; font-weight: 500; font-size: 1.5rem; color: #000000;">
+                        Google Gemini API Key
+                    </h3>
+                </div>                
+                """
+
+                st.markdown(gemini_key_html, unsafe_allow_html=True)
+                st.markdown("- Visit [Google AI Studio](https://makersuite.google.com/app/apikey) to get your free API key")
+                st.markdown("- This is used to power the AI conversation and analysis")
+                st.markdown("")
+                
+                google_api_key = st.text_input(
+                    "Google API Key",
+                    type="password",
+                    placeholder="Enter your Google Gemini API key...",
+                    key="google_api_input",
+                    help="Your Google Gemini API key from AI Studio"
+                )
+                
+                # Temporarily commented out - using mock profiles for now
+                # st.markdown("#### 2. Apify API Token")
+                # st.markdown("• Visit [Apify Console](https://console.apify.com/account/integrations) to get your API token")
+                # st.markdown("• This is used to scrape LinkedIn profile data")
+                # 
+                # apify_api_token = st.text_input(
+                #     "Apify API Token",
+                #     type="password",
+                #     placeholder="Enter your Apify API token...",
+                #     key="apify_api_input",
+                #     help="Your Apify API token from the Console"
+                # )
+                
+                # Set empty apify token for now since we're using mock profiles
+                apify_api_token = ""
+                
+                # Add spacing before button section
+                st.markdown("")
+                # st.markdown("---")
+                st.markdown("")
+                
+                # Save button with better styling - make it more prominent
+                if st.button("Save API Key & Continue", type="primary", use_container_width=False, icon=":material/save:"):
+                    # For now, we only need Google API key since we're using mock profiles
+                    if google_api_key:
                         if self._save_api_keys(google_api_key, apify_api_token):
                             st.session_state.api_keys_configured = True
-                            st.success("✅ API keys saved successfully! Loading assistant...")
+                            st.success("API key saved successfully! Loading assistant...", icon=":material/check_circle:")
                             # Small delay to show success message before rerun
                             time.sleep(1)
                             st.rerun()
                     else:
-                        st.warning("⚠️ Please provide both API keys to continue.")
-            
-            # Add helpful information
-            st.markdown("---")
-            with st.expander("Why do we need these API keys?", expanded=False, icon=":material/info:"):
-                st.markdown("""
-                **Google Gemini API Key:**
-                - Powers the AI conversation and profile analysis
-                - Provides intelligent career guidance and content suggestions
-                - Free tier available with generous usage limits
+                        st.warning("⚠️ Please provide your Google API key to continue.")
                 
-                **Apify API Token:**
-                - Enables scraping of LinkedIn profile data
-                - Required to analyze your LinkedIn profile
-                - Free tier includes limited scraping credits
+                # Add helpful information
+                st.markdown("")
+                # st.markdown("---")
+                st.markdown("")
                 
-                **Security Note:** Your API keys are stored locally in a `.env` file and are not shared with anyone.
-                """)
+                with st.expander("Why do we need this API key?", expanded=False, icon=":material/info:"):
+                    st.markdown("""
+                    **Google Gemini API Key:**
+                    - Powers the AI conversation and profile analysis
+                    - Provides intelligent career guidance and content suggestions
+                    - Free tier available with generous usage limits
+                    
+                    **Note:** We're currently using mock LinkedIn profiles for testing, so no Apify token is needed at this time.
+                    
+                    **Security Note:** Your API key is stored locally in a `.env` file and is not shared with anyone.
+                    """)
 
     def _format_structured_data(self, data, title):
         """Format structured data for display in the sidebar"""
@@ -487,7 +555,8 @@ APIFY_API_TOKEN={apify_api_token}
             # Display LinkedIn profile info
             if st.session_state.bot_state.linkedin_data:
                 profile = st.session_state.bot_state.linkedin_data
-                st.success(f"✅ Profile loaded: {profile.get('name', 'Unknown')}")
+                extracted_name = st.session_state.bot_state.linkedin_url.split("/")[-2] if st.session_state.bot_state.linkedin_url else "Unknown"
+                st.success(f"Profile loaded: {extracted_name}", icon=":material/check_circle:")
                 
                 with st.expander("Profile Summary", expanded=True):
                     st.write(f"**About:** {profile.get('about', 'No description')}")
@@ -933,22 +1002,22 @@ APIFY_API_TOKEN={apify_api_token}
     def _test_api_keys(self):
         """Test if the configured API keys are working"""
         try:
-            # Test Google API key
+            # Test Google API key (only required one for now)
             google_key = os.getenv('GOOGLE_API_KEY')
-            apify_key = os.getenv('APIFY_API_TOKEN')
+            # apify_key = os.getenv('APIFY_API_TOKEN')  # Commented out for mock profiles
             
-            if not google_key or not apify_key:
-                return False, "API keys not found in environment"
+            if not google_key:
+                return False, "Google API key not found in environment"
             
             # Basic format check for Google API key
             if not google_key.startswith('AI') or len(google_key) < 30:
                 return False, "Google API key format appears invalid"
             
-            # Basic format check for Apify token
-            if len(apify_key) < 20:
-                return False, "Apify API token format appears invalid"
+            # Commented out Apify validation since we're using mock profiles
+            # if len(apify_key) < 20:
+            #     return False, "Apify API token format appears invalid"
             
-            return True, "API keys appear valid"
+            return True, "Google API key appears valid"
             
         except Exception as e:
             return False, f"Error testing API keys: {str(e)}"
