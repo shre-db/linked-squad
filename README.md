@@ -5,6 +5,7 @@
 
 TODO:
 1. Improve UI for data clearance, API keys, and other configurations
+2. Provide more mock profiles and job descriptions for testing
 2. Deploy on Streamlit
 3. Add Docker support
 4. Add Apify integration for LinkedIn scraping

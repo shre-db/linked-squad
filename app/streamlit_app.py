@@ -46,6 +46,11 @@ def _get_profile_function():
     except Exception as e:
         st.error(f"Error importing get_profile: {e}")
         return None
+    
+def get_default_avatar():
+    bot_path = os.path.join(os.path.dirname(__file__), "..", "assets", "sparkle-light.svg")
+    user_path = os.path.join(os.path.dirname(__file__), "..", "assets", "user-light.svg")
+    return bot_path, user_path
 
 class LinkedInGenieStreamlit:
     def __init__(self):
@@ -783,15 +788,17 @@ APIFY_API_TOKEN={apify_api_token}
         
         # Chat container
         chat_container = st.container()
+
+        bot_path, user_path = get_default_avatar()
         
         # Display conversation history FIRST
         with chat_container:
             for i, msg in enumerate(st.session_state.messages):
                 if msg["role"] == "user":
-                    with st.chat_message("user"):
+                    with st.chat_message("user", avatar=user_path):
                         st.write(msg["content"])
                 else:
-                    with st.chat_message("assistant"):
+                    with st.chat_message("assistant", avatar=bot_path):
                         st.write(msg["content"])
         
         # Handle pending message processing AFTER chat messages are displayed

@@ -1,0 +1,23 @@
+Experience: 4.00 + years
+Salary: USD 80000.00 / year (based on experience)
+Expected Notice Period: 15 Days
+Shift: (GMT+05:30) Asia/Kolkata (IST)
+Opportunity Type: Remote
+Placement Type: Full Time Contract for 12 Months(40 hrs a week/160 hrs a month) (*Note: This is a requirement for one of Uplers' client - An USA based Series A funded Technology Startup)
+What do you need for this opportunity?
+Must have skills required: Generative Models, jax, Reinforcement Learning, Scikit-learn, Pytorch, TensorFlow, AWS, Docker, NLP, Python
+An USA based Series A funded Technology Startup is Looking for:  Senior Deep Learning Engineer
+Job Summary: We are seeking a highly skilled and experienced Senior Deep Learning Engineer to join our team. This individual will lead the design, development, and deployment of cutting-edge deep learning models and systems. The ideal candidate is passionate about leveraging state-of-the-art machine learning techniques to solve complex real-world problems, thrives in a collaborative environment, and has a proven track record of delivering impactful AI solutions.
+Key Responsibilities:
+Model Development and Optimization: Design, train, and deploy advanced deep learning models for various applications such as computer vision, natural language processing, speech recognition, and recommendation systems. Optimize models for performance, scalability, and efficiency on various hardware platforms (e.g., GPUs, TPUs).
+Research and Innovation: Stay updated with the latest advancements in deep learning, AI, and related technologies. Develop novel architectures and techniques to push the boundaries of what’s possible in AI applications.
+System Design and Deployment: Architect and implement scalable and reliable machine learning pipelines for training and inference. Collaborate with software and DevOps engineers to deploy models into production environments.
+Collaboration and Leadership: Work closely with cross-functional teams, including data scientists, product managers, and software engineers, to define project goals and deliverables. Provide mentorship and technical guidance to junior team members and peers.
+Data Management: Collaborate with data engineering teams to preprocess, clean, and augment large datasets. Develop tools and processes for efficient data handling and annotation.
+Performance Evaluation: Define and monitor key performance metrics (KPIs) to evaluate model performance and impact. Conduct rigorous A/B testing and error analysis to continuously improve model outputs.
+Qualifications and Skills:
+Education: Bachelor’s or Master’s degree in Computer Science, Electrical Engineering, or a related field. PhD preferred.
+Experience: 5+ years of experience in developing and deploying deep learning models. Proven track record of delivering AI-driven products or research with measurable impact.
+Technical Skills: Proficiency in deep learning frameworks such as TensorFlow, PyTorch, or JAX. Strong programming skills in Python, with experience in libraries like NumPy, Pandas, and Scikit-learn. Familiarity with distributed computing frameworks such as Spark or Dask. Hands-on experience with cloud platforms (AWS or GCP) and containerization tools (Docker, Kubernetes).
+Domain Expertise: Experience with at least one specialized domain, such as computer vision, NLP, or time-series analysis. Familiarity with reinforcement learning, generative models, or other advanced AI techniques is a plus.
+Soft Skills: Strong problem-solving skills and the ability to work independently. Excellent communication and collaboration abilities. Commitment to fostering a culture of innovation and excellence.
