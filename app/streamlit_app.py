@@ -6,6 +6,14 @@ import base64
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
+# Load environment variables at startup
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(project_root, '.env'))
+except ImportError:
+    # dotenv not available, will rely on system environment
+    pass
+
 import streamlit as st
 from streamlit_chat import message
 import uuid
@@ -207,7 +215,20 @@ class LinkedInGenieStreamlit:
         st.markdown(custom_css, unsafe_allow_html=True)
 
     def _check_existing_api_keys(self):
-        """Check if API keys already exist in .env file and have valid values"""
+        """Check if API keys already exist and are valid"""
+        # First check environment variables (they might be loaded from .env)
+        google_key = os.getenv('GOOGLE_API_KEY')
+        apify_key = os.getenv('APIFY_API_TOKEN')
+        
+        # If found in environment, validate them
+        if google_key and apify_key:
+            google_valid = (google_key not in ['', 'your_google_api_key_here'] and len(google_key) > 10)
+            apify_valid = (apify_key not in ['', 'your_apify_api_token_here'] and len(apify_key) > 10)
+            
+            if google_valid and apify_valid:
+                return True
+        
+        # If not in environment, check .env file directly
         env_path = os.path.join(project_root, '.env')
         if not os.path.exists(env_path):
             return False
@@ -236,7 +257,19 @@ class LinkedInGenieStreamlit:
                          apify_key not in ['', 'your_apify_api_token_here'] and
                          len(apify_key) > 10)  # Basic length check
             
-            return google_valid and apify_valid
+            # If keys are valid in file, reload environment
+            if google_valid and apify_valid:
+                try:
+                    from dotenv import load_dotenv
+                    load_dotenv(env_path, override=True)
+                    return True
+                except ImportError:
+                    # Set environment variables manually if dotenv not available
+                    os.environ['GOOGLE_API_KEY'] = google_key
+                    os.environ['APIFY_API_TOKEN'] = apify_key
+                    return True
+            
+            return False
             
         except Exception as e:
             print(f"Error checking API keys: {e}")
@@ -309,6 +342,11 @@ APIFY_API_TOKEN={apify_api_token}
         """Display API key configuration screen"""
         st.markdown("## 🔑 API Configuration Required")
         st.markdown("Welcome to LinkedIn Assistant! To get started, please provide your API keys below.")
+        
+        # Check if .env file exists but keys are invalid
+        env_path = os.path.join(project_root, '.env')
+        if os.path.exists(env_path):
+            st.info("ℹ️ Found existing .env file, but API keys need to be updated or are invalid.")
         
         # Add some spacing and instructions
         st.markdown("---")
@@ -486,6 +524,19 @@ APIFY_API_TOKEN={apify_api_token}
                         "Career Guidance"
                     )
                     st.markdown(formatted)
+            
+            # Add settings section
+            st.markdown("---")
+            with st.expander("⚙️ Settings", expanded=False):
+                st.markdown("**API Configuration**")
+                if st.button("🔄 Reconfigure API Keys", help="Update your API keys", use_container_width=True):
+                    # Clear API key configuration to force reconfiguration
+                    st.session_state.api_keys_configured = False
+                    if 'api_keys_tested' in st.session_state:
+                        del st.session_state.api_keys_tested
+                    if 'keys_loaded_message_shown' in st.session_state:
+                        del st.session_state.keys_loaded_message_shown
+                    st.rerun()
 
     def _initialize_graph_runner(self):
         """Initialize the graph runner with proper error handling"""
@@ -574,6 +625,12 @@ APIFY_API_TOKEN={apify_api_token}
         if not st.session_state.api_keys_configured:
             self._display_api_config_screen()
             return
+        
+        # Show confirmation when keys are loaded from existing .env (only once)
+        if st.session_state.api_keys_configured and 'keys_loaded_message_shown' not in st.session_state:
+            if os.path.exists(os.path.join(project_root, '.env')):
+                st.success("✅ API keys loaded from existing configuration!")
+            st.session_state.keys_loaded_message_shown = True
         
         # Test API keys if they were just configured
         if st.session_state.api_keys_configured and 'api_keys_tested' not in st.session_state:
