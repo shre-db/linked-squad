@@ -158,6 +158,5 @@ class RoutingAgent:
             print(response.content if hasattr(response, 'content') else str(response))
             print("=" * 80)
             return response.content if hasattr(response, 'content') else str(response)
-            
         except Exception as e:
             return f"I've completed the {agent_type} analysis. The detailed results are available, and I'm ready to help you with next steps. What would you like to explore further?"
