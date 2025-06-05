@@ -1,0 +1,46 @@
+# Dockerfile.conda - Conda environment approach
+FROM continuumio/miniconda3
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/conda/envs/linked-squad/bin:$PATH" \
+    PYTHONPATH="/app:$PYTHONPATH"
+
+# Install system dependencies (including curl for health check)
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory
+WORKDIR /app
+
+# Copy dependency files first for better layer caching
+COPY environment.yaml .
+
+# Create the conda environment
+RUN conda env create -f environment.yaml && \
+    conda clean --all --yes
+
+# Copy the rest of the application code
+COPY . .
+
+# Create a non-root user for security
+RUN useradd --create-home --shell /bin/bash appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Expose Streamlit's default port
+EXPOSE 8501
+
+# Health check for the application
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
+# Set Streamlit environment variables
+ENV STREAMLIT_SERVER_HEADLESS=true \
+    STREAMLIT_SERVER_ENABLE_CORS=false \
+    STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
+
+# Run the Streamlit application using conda
+CMD ["conda", "run", "--no-capture-output", "-n", "linked-squad", "streamlit", "run", "app/streamlit_app.py", "--server.address", "0.0.0.0", "--server.port", "8501"]

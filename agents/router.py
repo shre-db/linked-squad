@@ -18,6 +18,10 @@ class RoutingAgent:
             user_input=user_input
         )
         response = self.model.invoke(prompt)
+        print(f"\nROUTER LLM RESPONSE:")
+        print("=" * 80)
+        print(response.content if hasattr(response, 'content') else str(response))
+        print("=" * 80)
         parsed_response = parse_llm_response(response)
         actions = {
             "CALL_ANALYZE", "CALL_REWRITE", "CALL_JOB_FIT", "CALL_GUIDE",
@@ -31,7 +35,6 @@ class RoutingAgent:
     def extract_user_instructions(self, user_input, conversation_history, current_task="general"):
         """Extract specific user instructions using LLM-based analysis for robust intent understanding."""
         try:
-            # Use the instruction extraction prompt template
             prompt_template = get_instruction_extraction_prompt()
             extraction_prompt = prompt_template.format(
                 user_input=user_input,
@@ -41,6 +44,10 @@ class RoutingAgent:
             
             response = self.model.invoke(extraction_prompt)
             response_content = response.content if hasattr(response, 'content') else str(response)
+            print(f"\nROUTER INSTRUCTION EXTRACTION LLM RESPONSE:")
+            print("=" * 80)
+            print(response_content)
+            print("=" * 80)
             
             # Parse the LLM response as JSON
             try:
@@ -145,7 +152,10 @@ class RoutingAgent:
             )
             
             response = self.model.invoke(processing_prompt)
+            print(f"\nROUTER OUTPUT PROCESSING LLM RESPONSE:")
+            print("=" * 80)
+            print(response.content if hasattr(response, 'content') else str(response))
+            print("=" * 80)
             return response.content if hasattr(response, 'content') else str(response)
-            
         except Exception as e:
             return f"I've completed the {agent_type} analysis. The detailed results are available, and I'm ready to help you with next steps. What would you like to explore further?"

@@ -25,47 +25,99 @@ Provide comprehensive career guidance covering:
 **IMPORTANT: Follow any specific user instructions provided in the additional context above. If the user requested specific guidance like "focus on short-term goals", "emphasize networking strategies", or "prioritize skill development", tailor your response accordingly.**
 
 **Critical Requirements:**
-- Your response MUST be valid JSON only
-- Do not include any text outside the JSON object
+- Respond in well-structured markdown format that can be easily rendered in the UI
 - Provide specific, actionable recommendations
 - Base advice on profile strengths and market realities
 - Include both immediate and long-term strategies
 - Incorporate any specific user instructions from the additional context
+- Use clear headings, bullet points, and formatting for readability
 
-**Output Format (JSON only):**
-{{
-    "guidance_summary": "Overview of key career recommendations based on user query and profile",
-    "immediate_actions": [
-        "Specific action 1 with clear steps and timeline",
-        "Specific action 2 with implementation guidance",
-        "Specific action 3 with expected outcomes"
-    ],
-    "skill_development": {{
-        "priority_skills": ["skill1", "skill2", "skill3"],
-        "learning_resources": ["resource1", "resource2", "resource3"],
-        "skill_building_strategy": "Comprehensive plan for acquiring priority skills"
-    }},
-    "networking_strategy": {{
-        "target_connections": ["connection type 1", "connection type 2"],
-        "networking_activities": ["activity1", "activity2", "activity3"],
-        "networking_goals": "Specific networking objectives and outcomes"
-    }},
-    "market_positioning": {{
-        "value_proposition": "Clear statement of unique professional value",
-        "positioning_strategy": "How to position yourself in the target market",
-        "competitive_advantages": ["advantage1", "advantage2"]
-    }},
-    "long_term_roadmap": [
-        "6-month milestone with specific goals",
-        "1-year milestone with measurable outcomes",
-        "2-year vision with strategic objectives"
-    ],
-    "success_metrics": [
-        "Metric 1 for tracking progress",
-        "Metric 2 for measuring impact",
-        "Metric 3 for evaluating success"
-    ],
-    "guidance_notes": "Additional insights and personalized advice, including how any specific user instructions were addressed"
-}}"""
+**Output Format (Markdown):**
+
+# Career Guidance Report
+
+## 📋 Guidance Summary
+[Provide a comprehensive overview of key career recommendations based on user query and profile]
+
+## 🚀 Immediate Actions to Take
+
+### Action 1: [Action Title]
+- **Steps:** [Clear implementation steps]
+- **Timeline:** [Expected timeframe]
+- **Expected Outcome:** [What to expect]
+
+### Action 2: [Action Title]  
+- **Steps:** [Implementation guidance]
+- **Timeline:** [Expected timeframe]
+- **Expected Outcome:** [What to expect]
+
+### Action 3: [Action Title]
+- **Steps:** [Implementation guidance] 
+- **Timeline:** [Expected timeframe]
+- **Expected Outcome:** [What to expect]
+
+## 🎯 Priority Skills to Develop
+
+**Top Skills:** Skill1, Skill2, Skill3
+
+**Learning Resources:**
+- Resource1 - [Brief description]
+- Resource2 - [Brief description] 
+- Resource3 - [Brief description]
+
+**Skill Building Strategy:**
+[Comprehensive plan for acquiring priority skills with specific steps and timeline]
+
+## 🤝 Networking Strategy
+
+**Target Connections:**
+- Connection type 1
+- Connection type 2  
+- Connection type 3
+
+**Networking Activities:**
+- Activity1 - [Implementation details]
+- Activity2 - [Implementation details]
+- Activity3 - [Implementation details]
+
+**Networking Goals:**
+[Specific networking objectives and expected outcomes]
+
+## 💼 Market Positioning
+
+**Your Value Proposition:**
+[Clear statement of unique professional value]
+
+**Positioning Strategy:**
+[How to position yourself in the target market]
+
+**Competitive Advantages:**
+- Advantage1
+- Advantage2
+- Advantage3
+
+## 🗺️ Long-Term Career Roadmap
+
+### 6-Month Milestone
+[Specific goals and deliverables]
+
+### 1-Year Milestone  
+[Measurable outcomes and achievements]
+
+### 2-Year Vision
+[Strategic objectives and career destination]
+
+## 📊 Success Metrics to Track
+
+**Key Performance Indicators:**
+- Metric 1 for tracking progress
+- Metric 2 for measuring impact
+- Metric 3 for evaluating success
+
+**Measurement Strategy:**
+[How and when to evaluate these metrics]
+
+## 💡 Additional Insights
+[Additional insights and personalized advice, including how any specific user instructions were addressed]"""
         )
     )

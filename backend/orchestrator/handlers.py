@@ -7,7 +7,6 @@ from agents.career_guide import CareerGuideAgent
 from agents.content_rewriter import ContentRewriterAgent
 from agents.job_fit_evaluator import JobFitEvaluatorAgent
 from agents.profile_analyzer import ProfileAnalyzerAgent
-from agents.utils import parse_llm_response
 from backend.logger import log_agent_action, log_router_decision, log_error
 
 routing_agent = RoutingAgent()
@@ -161,8 +160,8 @@ def analyze_node(state: ProfileBotState) -> ProfileBotState:
             conversation_context=state.conversation_context
         )
         
-        # Validate that we got a proper result
-        if not result or not isinstance(result, dict):
+        # Validate that we got a proper result (ProfileAnalyzerAgent returns markdown string)
+        if not result or not isinstance(result, str):
             error_msg = "Profile analysis failed to produce valid results. Please try again."
             log_error("profile_analyzer", f"Invalid analysis result: {type(result)}")
             state.error_message = error_msg
@@ -200,6 +199,10 @@ def analyze_node(state: ProfileBotState) -> ProfileBotState:
         state.error_message = error_msg
         state.current_bot_response = "I encountered an issue parsing the analysis results. This might be due to an unexpected response format. Please try again."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
     except Exception as e:
         error_msg = f"Unexpected analysis error: {str(e)}"
@@ -207,6 +210,10 @@ def analyze_node(state: ProfileBotState) -> ProfileBotState:
         state.error_message = error_msg
         state.current_bot_response = "I apologize, but I encountered an error during profile analysis. Please try again."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
 
 def rewrite_node(state: ProfileBotState) -> ProfileBotState:
@@ -257,12 +264,20 @@ def rewrite_node(state: ProfileBotState) -> ProfileBotState:
         state.error_message = f"Rewriting error: {str(e)}"
         state.current_bot_response = "I encountered an issue generating content suggestions. Please ensure your profile has been analyzed first."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
     except Exception as e:
         log_error("content_rewriter", str(e))
         state.error_message = str(e)
         state.current_bot_response = "I apologize, but I encountered an error during content rewriting. Please try again."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
 
 def job_fit_node(state: ProfileBotState) -> ProfileBotState:
@@ -322,12 +337,20 @@ def job_fit_node(state: ProfileBotState) -> ProfileBotState:
         state.error_message = f"Job fit error: {str(e)}"
         state.current_bot_response = "I encountered an issue evaluating job fit. Please ensure both profile analysis and job description are available."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
     except Exception as e:
         log_error("job_fit_evaluator", str(e))
         state.error_message = str(e)
         state.current_bot_response = "I apologize, but I encountered an error during job fit evaluation. Please try again."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
 
 def guide_node(state: ProfileBotState) -> ProfileBotState:
@@ -378,12 +401,20 @@ def guide_node(state: ProfileBotState) -> ProfileBotState:
         state.error_message = f"Career guidance error: {str(e)}"
         state.current_bot_response = "I encountered an issue providing career guidance. Please ask a specific career-related question."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
     except Exception as e:
         log_error("career_guide", str(e))
         state.error_message = str(e)
         state.current_bot_response = "I apologize, but I encountered an error providing career guidance. Please try again."
         state.current_router_action = "RESPOND_DIRECTLY"
+        # Clear processing flags to prevent routing to ProcessAgentOutput
+        state.pending_agent_output = None
+        state.needs_output_processing = False
+        state.last_agent_called = None
         return state
 
 def process_agent_output_node(state: ProfileBotState) -> ProfileBotState:
@@ -393,9 +424,22 @@ def process_agent_output_node(state: ProfileBotState) -> ProfileBotState:
     
     try:
         if not state.pending_agent_output or not state.last_agent_called:
-            log_error("output_processor", "Missing agent output or agent type")
-            state.current_bot_response = "I don't have any agent output to process. Please try again."
+            log_error("output_processor", f"Missing agent output or agent type - pending_output: {bool(state.pending_agent_output)}, last_agent: {state.last_agent_called}, needs_processing: {state.needs_output_processing}")
+            
+            # Provide more specific error context
+            if not state.last_agent_called:
+                error_msg = "No agent type specified for output processing. This suggests an agent execution issue."
+            elif not state.pending_agent_output:
+                error_msg = f"No output available from {state.last_agent_called} agent. The agent may have encountered an error."
+            else:
+                error_msg = "Missing agent output data for processing."
+            
+            state.current_bot_response = f"I encountered an issue processing the agent results. {error_msg} Please try your request again."
             state.current_router_action = "RESPOND_DIRECTLY"
+            # Clear processing flags
+            state.pending_agent_output = None
+            state.needs_output_processing = False
+            state.last_agent_called = None
             return state
         
         # Use the router to process and contextualize the agent output
