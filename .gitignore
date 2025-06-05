@@ -9,7 +9,7 @@
 *.json
 *.ckpt
 *.onnx
-# .env
+.env
 *.zip
 *.tar
 *.tar.gz
