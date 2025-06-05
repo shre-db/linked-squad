@@ -9,7 +9,7 @@ TODO:
 3. Deploy on Streamlit ✅
 4. Add Docker support ✅
 5. Improve the prompt to not display specialized agent's report in the main chat ✅
-6. Review and optimize code structure
+6. Review and optimize code structure ✅
 7. Add Apify integration for LinkedIn scraping
 
 
