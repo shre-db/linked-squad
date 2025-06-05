@@ -498,10 +498,13 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         if not data:
             return ""
         
-        # Since the agent responses now contain markdown-formatted strings as values,
-        # we just need to concatenate all the values without showing the keys
-        formatted = ""
+        # Agent outputs are now markdown strings, so we can return them directly
+        if isinstance(data, str):
+            # Data is already markdown-formatted, return as-is
+            return data
         
+        # Legacy handling for dictionary data (if any still exists)
+        formatted = ""
         if isinstance(data, dict):
             for section, content in data.items():
                 # Skip certain meta fields that aren't meant for display
