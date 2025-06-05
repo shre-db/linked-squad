@@ -3,17 +3,6 @@
 > **An AI-powered career assistant that transforms your LinkedIn profile, evaluates job fit, and guides your job search with smart, personalized insights.**
 
 
-TODO:
-1. Improve UI for data clearance, API keys, and other configurations ✅
-2. Provide more mock profiles and job descriptions for testing ✅
-3. Deploy on Streamlit ✅
-4. Add Docker support ✅
-5. Improve the prompt to not display specialized agent's report in the main chat ✅
-6. Review and optimize code structure ✅
-7. Add Apify integration for LinkedIn scraping
-
-
-
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3.25-green.svg)](https://langchain.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.4.7-purple.svg)](https://langgraph.com)
@@ -21,10 +10,8 @@ TODO:
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com)
 
 ## Features
-**Important Note:** 
-When interacting with the bot through the terminal, ensure inputs are provided in a single line without line breaks. The bot is designed to handle single-line inputs effectively.
 
-### 🔍 **Intelligent Profile Analysis**
+###  **Intelligent Profile Analysis**
 - **Comprehensive Profile Scoring**: Get detailed completeness (0-100%) and impact scores for your LinkedIn profile
 - **Section-by-Section Analysis**: In-depth evaluation of headline, summary, experience, skills, and recommendations
 - **Keyword Gap Identification**: Discover missing and underutilized keywords for better visibility
@@ -56,26 +43,12 @@ When interacting with the bot through the terminal, ensure inputs are provided i
 
 ## Architecture
 
+### Initial Plan/Schema
+![Approach](./docs/initial_schema.png)
+
+### Actual Implementation Schema
+![Implementation](./docs/linkedin_assistant_impl_schema.png)
 This project uses a sophisticated multi-agent architecture built with **LangGraph** and **LangChain**:
-
-![Approach](./docs/image.png)
-
-```mermaid
-graph TD
-    A[User Input] --> B[Router Agent]
-    B --> C[Profile Analyzer]
-    B --> D[Content Rewriter]
-    B --> E[Job Fit Evaluator]
-    B --> F[Career Guide]
-    C --> G[Analysis Report]
-    D --> H[Content Suggestions]
-    E --> I[Fit Evaluation]
-    F --> J[Career Guidance]
-    G --> K[User Interface]
-    H --> K
-    I --> K
-    J --> K
-```
 
 ### **Specialized AI Agents**
 - **Router Agent**: Intelligent conversation flow management and action routing
@@ -85,20 +58,20 @@ graph TD
 - **Career Guide**: Personalized career advice and strategic guidance
 
 ### **Technical Stack**
-- **Backend**: Python 3.10+ with LangChain & LangGraph
+- **Backend**: Python 3.12+ with LangChain & LangGraph
 - **AI Model**: Google Gemini 1.5 Flash for natural language processing
+- **Frontend**: Streamlit web application with modern UI
 - **State Management**: Pydantic models with type safety
 - **Memory**: LangGraph checkpointing for conversation persistence
-- **Interface**: Terminal-based chat interface (Streamlit-ready)
 - **Containerization**: Docker with conda environment
 
 ## Quick Start
 
 ### Important Note:
-**When interacting with the bot through the terminal, ensure inputs are provided in a single line without line breaks. The bot is designed to handle single-line inputs effectively.**
+**The application now runs as a modern web interface using Streamlit. The terminal interface has been deprecated but is still available for legacy use.**
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.12+
 - Google AI API key (for Gemini)
 - Docker (optional)
 
@@ -140,38 +113,105 @@ APIFY_API_TOKEN=your_apify_api_token_here  # Optional, for future scraping
 ```
 
 ### 4. Run the Application
+In your project's root directory:
 ```bash
-# Terminal interface
-python app/main.py
+# Streamlit web interface (recommended)
+PYTHONPATH=. streamlit run app/streamlit_app.py
 
-# Or with Streamlit (coming soon)
-streamlit run app/main.py
+# Legacy terminal interface (deprecated)
+PYTHONPATH=. python app/deprecated_terminal_app.py
 ```
 
-## Docker Deployment
+## Docker Setup Guide
 
-### Build and Run with Docker
+This project provides two Docker configurations to suit different preferences and use cases:
+
+### Option 1: Virtual Environment (Dockerfile.venv) - **Recommended**
+
+**Build and run:**
 ```bash
 # Build the image
-docker build -t linked-squad .
+docker build -f Dockerfile.venv -t linked-squad:venv .
 
 # Run the container
-docker run -p 8501:8501 linked-squad
+docker run -p 8501:8501 --env-file .env linked-squad:venv
+```
+
+### Option 2: Conda Environment (Dockerfile.conda)
+
+
+**Build and run:**
+```bash
+# Build the image
+docker build -f Dockerfile.conda -t linked-squad:conda .
+
+# Run the container
+docker run -p 8501:8501 --env-file .env linked-squad:conda
+```
+
+### Environment Variables
+
+Both Dockerfiles expect a `.env` file with your environment variables. Create one based on your needs:
+
+```bash
+# Example .env file
+GOOGLE_API_KEY=your_google_api_key_here
+APIFY_API_TOKEN=your_apify_token_here
+# Add other environment variables as needed
 ```
 
 ### Docker Compose (Optional)
+
+For easier management, you can also use docker-compose:
+
 ```yaml
+# docker-compose.yml
 version: '3.8'
 services:
   linked-squad:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.venv  # or Dockerfile.conda
     ports:
       - "8501:8501"
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    env_file:
+      - .env
     volumes:
-      - ./logs:/app/logs
+      - ./logs:/app/backend/logs  # Optional: persist logs
 ```
+
+Then run with:
+```bash
+docker-compose up --build
+```
+
+### Health Check
+
+Both containers include health checks. You can check the status with:
+```bash
+docker ps  # Shows health status
+docker inspect <container_id> | grep Health  # Detailed health info
+```
+
+### Troubleshooting
+
+#### Container won't start:
+1. Check your `.env` file exists and has the required variables
+2. Verify port 8501 isn't already in use: `lsof -i :8501`
+3. Check container logs: `docker logs <container_id>`
+
+#### Build fails:
+1. Ensure you have the latest Docker version
+2. Try building without cache: `docker build --no-cache ...`
+3. Check that all dependency files (requirements.txt, environment.yaml) exist
+
+#### Performance issues:
+1. Use Dockerfile.venv for better performance
+2. Add more memory to Docker if needed
+3. Consider using Docker BuildKit for faster builds:
+   ```bash
+   DOCKER_BUILDKIT=1 docker build ...
+   ```
 
 ## Usage Examples
 
@@ -237,13 +277,29 @@ linked-squad/
 │   ├── llm.py            # Language model setup
 │   └── memory.py         # State persistence
 ├── app/                  # User interface
-│   ├── main.py           # Terminal interface
-│   └── config.py         # App configuration
+│   ├── streamlit_app.py  # Modern Streamlit web interface
+│   ├── deprecated_terminal_app.py # Legacy terminal interface
+│   ├── config.py         # App configuration
+│   └── ui_utils.py       # UI utility functions
+├── assets/               # UI assets and icons
 ├── linkedin/             # LinkedIn data handling
-│   └── mock_profiles.py  # Sample profile data
-├── Dockerfile            # Container configuration
+│   ├── profiles.py       # Mock profile data
+│   └── apify_scrapper.py # Initial Apify integration (not yet enabled)
+├── docs/                 # Documentation and schemas
+│   ├── approach.md
+│   ├── challenges_and_solutions.md
+│   ├── initial_schema.png
+│   └── linkedin_assistant_impl_schema.png
+├── docker-compose.yml    # Docker Compose configuration
+├── Dockerfile.venv       # Container configuration (recommended)
+├── Dockerfile.conda      # Alternative container configuration
 ├── environment.yaml      # Conda environment
-└── requirements.txt      # Python dependencies
+├── requirements.txt      # Python dependencies
+├── environment.yaml      # Conda environment file
+├── .env.example          # Example environment variables
+├── .gitignore            # Git ignore file
+├── .dockerignore         # Docker ignore file 
+└── README.md             # Project documentation
 ```
 
 ## Configuration
@@ -256,28 +312,18 @@ linked-squad/
 ```python
 # Adjust in backend/llm.py
 model = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.5-flash-preview-04-17",
     temperature=0.7,
     top_p=0.9
 )
 ```
 
-## Testing
-
-```bash
-# Run tests (when available)
-pytest tests/
-
-# Test with mock profiles
-python app/main.py
-# Try: https://www.linkedin.com/in/johnsmith
-```
 
 ## Current Limitations
 
 - **Profile Scraping**: Currently uses mock profiles (Apify integration planned)
-- **UI Interface**: Terminal-based (Streamlit interface in development)
 - **Data Persistence**: In-memory only (database integration planned)
+- **Real-time Scraping**: LinkedIn data is simulated using mock profiles
 
 ## Roadmap
 
