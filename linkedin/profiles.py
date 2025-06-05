@@ -1,5 +1,6 @@
 __module_name__ = "profiles"
 
+import os
 import json
 from .apify_scrapper import linkedin_scraper
 
@@ -54,17 +55,26 @@ profile_d = {
 
 # Load from json file if available
 try:
-    with open("linkedin/mock_profile.json", "r") as f:
-        mock_profile = json.load(f)
-        print("Mock profile loaded from JSON file.")
-        # print(mock_profile)
+    # Load files and create a dictionary of profiles
+    local_profiles = {}
+    linkedin_dir = "linkedin"
+    json_files = [f for f in os.listdir(linkedin_dir) if f.endswith('.json')]
+    for file in json_files:
+        with open(os.path.join(linkedin_dir, file), "r") as f:
+            profile_data = json.load(f)
+            profile_name = file.split('.')[0]
+            local_profiles[profile_name] = profile_data
 except FileNotFoundError:
     print("Mock profiles JSON file not found, using default profiles.")
 
 
 def get_mock_profile(linkedin_url: str) -> dict:
     if "arjun-srivastava-ml" in linkedin_url:
-        return mock_profile
+        return local_profiles.get("linkedin_data_arjun_srivastava", {})
+    elif "michael-rodriguez-cfa" in linkedin_url:
+        return local_profiles.get("linkedin_data_michael_rodriguez", {})
+    elif "sarah-chen-architect" in linkedin_url:
+        return local_profiles.get("linkedin_data_sarah_chen", {})
     elif "johnsmith" in linkedin_url:
         return profile_a
     elif "alicejohnson" in linkedin_url:

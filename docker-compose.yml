@@ -1,0 +1,52 @@
+# Docker Compose configuration for easy development
+version: '3.8'
+
+services:
+  # Virtual environment version (recommended)
+  linked-squad-venv:
+    build:
+      context: .
+      dockerfile: Dockerfile.venv
+    ports:
+      - "8501:8501"
+    environment:
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_SERVER_ENABLE_CORS=false
+      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
+    env_file:
+      - .env
+    volumes:
+      # Optional: mount logs directory for persistence
+      - ./backend/logs:/app/backend/logs
+      # Optional: mount for development (uncomment next line for live reload)
+      # - .:/app
+    profiles:
+      - venv
+    container_name: linked-squad-venv
+
+  # Conda environment version
+  linked-squad-conda:
+    build:
+      context: .
+      dockerfile: Dockerfile.conda
+    ports:
+      - "8502:8501"  # Different port to avoid conflicts
+    environment:
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_SERVER_ENABLE_CORS=false
+      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
+    env_file:
+      - .env
+    volumes:
+      # Optional: mount logs directory for persistence
+      - ./backend/logs:/app/backend/logs
+      # Optional: mount for development (uncomment next line for live reload)
+      # - .:/app
+    profiles:
+      - conda
+    container_name: linked-squad-conda
+
+# Here is how to run the services:
+# Run venv version: docker-compose --profile venv up --build
+# Run conda version: docker-compose --profile conda up --build
+# Run both: docker-compose --profile venv --profile conda up --build
