@@ -18,7 +18,7 @@ class RoutingAgent:
             user_input=user_input
         )
         response = self.model.invoke(prompt)
-        print(f"\n🧭 ROUTER LLM RESPONSE:")
+        print(f"\nROUTER LLM RESPONSE:")
         print("=" * 80)
         print(response.content if hasattr(response, 'content') else str(response))
         print("=" * 80)
@@ -35,7 +35,6 @@ class RoutingAgent:
     def extract_user_instructions(self, user_input, conversation_history, current_task="general"):
         """Extract specific user instructions using LLM-based analysis for robust intent understanding."""
         try:
-            # Use the instruction extraction prompt template
             prompt_template = get_instruction_extraction_prompt()
             extraction_prompt = prompt_template.format(
                 user_input=user_input,
@@ -45,7 +44,7 @@ class RoutingAgent:
             
             response = self.model.invoke(extraction_prompt)
             response_content = response.content if hasattr(response, 'content') else str(response)
-            print(f"\n🔍 ROUTER INSTRUCTION EXTRACTION LLM RESPONSE:")
+            print(f"\nROUTER INSTRUCTION EXTRACTION LLM RESPONSE:")
             print("=" * 80)
             print(response_content)
             print("=" * 80)
@@ -153,7 +152,7 @@ class RoutingAgent:
             )
             
             response = self.model.invoke(processing_prompt)
-            print(f"\n📝 ROUTER OUTPUT PROCESSING LLM RESPONSE:")
+            print(f"\nROUTER OUTPUT PROCESSING LLM RESPONSE:")
             print("=" * 80)
             print(response.content if hasattr(response, 'content') else str(response))
             print("=" * 80)

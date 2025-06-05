@@ -39,7 +39,7 @@ class CareerGuideAgent:
                 additional_context=additional_context
             )
             response = self.model.invoke(prompt)
-            print(f"\n🎯 CAREER GUIDE LLM RESPONSE:")
+            print(f"\nCAREER GUIDE LLM RESPONSE:")
             print("=" * 80)
             print(response.content if hasattr(response, 'content') else str(response))
             print("=" * 80)

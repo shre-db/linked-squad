@@ -37,7 +37,7 @@ class JobFitEvaluatorAgent:
             additional_context=additional_context
         )
         response = self.model.invoke(prompt)
-        print(f"\n📊 JOB FIT EVALUATOR LLM RESPONSE:")
+        print(f"\nJOB FIT EVALUATOR LLM RESPONSE:")
         print("=" * 80)
         print(response.content if hasattr(response, 'content') else str(response))
         print("=" * 80)

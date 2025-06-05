@@ -38,7 +38,7 @@ class ContentRewriterAgent:
             additional_context=additional_context
         )
         response = self.model.invoke(prompt)
-        print(f"\n✍️ CONTENT REWRITER LLM RESPONSE:")
+        print(f"\nCONTENT REWRITER LLM RESPONSE:")
         print("=" * 80)
         print(response.content if hasattr(response, 'content') else str(response))
         print("=" * 80)

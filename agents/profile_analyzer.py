@@ -42,7 +42,7 @@ class ProfileAnalyzerAgent:
             try:
                 logger.info(f"Profile analysis attempt {attempt + 1}/{max_retries + 1}")
                 response = self.model.invoke(prompt)
-                print(f"\n🤖 PROFILE ANALYZER LLM RESPONSE (Attempt {attempt + 1}):")
+                print(f"\nPROFILE ANALYZER LLM RESPONSE (Attempt {attempt + 1}):")
                 print("=" * 80)
                 print(response.content if hasattr(response, 'content') else str(response))
                 print("=" * 80)

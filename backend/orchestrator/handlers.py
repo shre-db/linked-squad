@@ -7,7 +7,6 @@ from agents.career_guide import CareerGuideAgent
 from agents.content_rewriter import ContentRewriterAgent
 from agents.job_fit_evaluator import JobFitEvaluatorAgent
 from agents.profile_analyzer import ProfileAnalyzerAgent
-from agents.utils import parse_llm_response
 from backend.logger import log_agent_action, log_router_decision, log_error
 
 routing_agent = RoutingAgent()

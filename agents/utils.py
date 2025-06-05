@@ -27,9 +27,8 @@ def clean_json_string(json_str):
         json_str = json_str[:end_idx + 1]
     
     # Fix common escaping issues in markdown content
-    # This is a basic fix - you might need more sophisticated handling
-    json_str = json_str.replace('\n', '\\n')  # Escape newlines
-    json_str = re.sub(r'(?<!\\)"(?=\w)', '\\"', json_str)  # Escape unescaped quotes before words
+    json_str = json_str.replace('\n', '\\n')
+    json_str = re.sub(r'(?<!\\)"(?=\w)', '\\"', json_str)
     
     return json_str
 
@@ -117,13 +116,11 @@ def parse_llm_response(response):
                 logger.info("Successfully parsed JSON after cleaning")
                 return parsed
             except json.JSONDecodeError as e2:
-                # Log detailed debugging information
                 logger.error(f"JSON decode error after cleaning: {e2}")
                 logger.error(f"JSON decode error position: {e2.pos if hasattr(e2, 'pos') else 'Unknown'}")
                 logger.error(f"Problematic JSON content (first 1000 chars): {json_content[:1000]}")
                 logger.error(f"Full JSON content length: {len(json_content)}")
                 
-                # Try to identify the specific issue
                 if '"' in json_content and '\\"' not in json_content:
                     logger.error("Potential issue: Unescaped quotes in JSON content")
                 if json_content.count('{') != json_content.count('}'):

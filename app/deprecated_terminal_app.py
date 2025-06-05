@@ -1,5 +1,10 @@
+__module_name__ = "deprecated_terminal_app"
+
+"""
+Warning! Do not use this module. This module is no longer maintained. Use `streamlit_app.py` instead, which is in active development.
+"""
+
 import uuid
-import json
 from backend.orchestrator.state_schema import ProfileBotState
 from backend.orchestrator.langgraph_graph import get_graph_runner
 from linkedin.profiles import get_mock_profile

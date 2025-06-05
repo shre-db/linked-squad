@@ -52,7 +52,7 @@ def _get_profile_function():
         st.error(f"Error importing get_profile: {e}")
         return None
     
-def get_default_avatar():
+def _get_default_avatar():
     bot_path = os.path.join(os.path.dirname(__file__), "..", "assets", "sparkle-light.svg")
     user_path = os.path.join(os.path.dirname(__file__), "..", "assets", "user-light.svg")
     return bot_path, user_path
@@ -229,7 +229,7 @@ class LinkedInGenieStreamlit:
 
     def _check_existing_api_keys(self):
         """Check if API keys already exist and are valid"""
-        # First check environment variables (they might be loaded from .env)
+        # First check environment variables. See if they might be loaded from .env
         google_key = os.getenv('GOOGLE_API_KEY')
         # apify_key = os.getenv('APIFY_API_TOKEN')  # Commented out for now
         
@@ -366,7 +366,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         linkedin_icon_b64 = self._load_svg_icon(linkedin_icon_path)
         key_icon_b64 = self._load_svg_icon(key_icon_path)
 
-        # LinkedIn Assistant Banner (same as main interface)
+        # LinkedIn Assistant Banner
         if linkedin_icon_b64:
             title_html = f"""
             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
@@ -385,7 +385,6 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         
         st.markdown("Your AI-powered career advisor for LinkedIn optimization")
         
-        # Divider between banner and authentication section
         st.markdown("---")
         
         # API Configuration section (centered)
@@ -928,7 +927,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         # Chat container
         chat_container = st.container()
 
-        bot_path, user_path = get_default_avatar()
+        bot_path, user_path = _get_default_avatar()
         
         # Display conversation history FIRST
         with chat_container:
