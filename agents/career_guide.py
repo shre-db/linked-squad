@@ -2,7 +2,7 @@ __module_name__ = "career_guide"
 
 from backend.llm import get_chat_model
 from backend.prompts.career_guidance import get_prompt
-from .utils import parse_llm_response, validate_required_params
+from .utils import parse_markdown_response, validate_required_params
 from typing import Optional, Dict, Any
 
 class CareerGuideAgent:
@@ -11,7 +11,7 @@ class CareerGuideAgent:
         self.prompt_template = get_prompt()
 
     def guide(self, user_query, profile_analysis_report, target_role, user_instructions: Optional[Dict[str, Any]] = None,
-              conversation_context: Optional[str] = None):
+              conversation_context: Optional[str] = None) -> str:
         validate_required_params(
             user_query=user_query,
             profile_analysis_report=profile_analysis_report,
@@ -43,6 +43,6 @@ class CareerGuideAgent:
             print("=" * 80)
             print(response.content if hasattr(response, 'content') else str(response))
             print("=" * 80)
-            return parse_llm_response(response)
+            return parse_markdown_response(response)
         except Exception as e:
             raise ValueError(f"Failed to generate career guidance: {e}")

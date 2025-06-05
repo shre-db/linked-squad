@@ -25,26 +25,99 @@ Provide comprehensive career guidance covering:
 **IMPORTANT: Follow any specific user instructions provided in the additional context above. If the user requested specific guidance like "focus on short-term goals", "emphasize networking strategies", or "prioritize skill development", tailor your response accordingly.**
 
 **Critical Requirements:**
-- Your response MUST be valid JSON only
-- Do not include any text outside the JSON object
-- Do not wrap the JSON in markdown code blocks
-- Do not add explanatory text before or after the JSON
-- Ensure all strings are properly escaped (use \\" for quotes within strings)
+- Respond in well-structured markdown format that can be easily rendered in the UI
 - Provide specific, actionable recommendations
 - Base advice on profile strengths and market realities
 - Include both immediate and long-term strategies
 - Incorporate any specific user instructions from the additional context
+- Use clear headings, bullet points, and formatting for readability
 
-**Output Format (JSON only):**
-{{
-    "guidance_summary": "Overview of key career recommendations based on user query and profile",
-    "immediate_actions": "**Immediate Actions to Take:**\n\n**Action 1:** Specific action with clear steps and timeline\n\n**Action 2:** Specific action with implementation guidance\n\n**Action 3:** Specific action with expected outcomes",
-    "skill_development": "**Priority Skills to Develop:**\n\nSkill1, Skill2, Skill3\n\n**Learning Resources:**\n\n- Resource1\n- Resource2\n- Resource3\n\n**Skill Building Strategy:**\n\nComprehensive plan for acquiring priority skills with specific steps and timeline",
-    "networking_strategy": "**Target Connections:**\n\nConnection type 1, Connection type 2, Connection type 3\n\n**Networking Activities:**\n\n- Activity1\n- Activity2\n- Activity3\n\n**Networking Goals:**\n\nSpecific networking objectives and expected outcomes",
-    "market_positioning": "**Value Proposition:**\n\nClear statement of unique professional value\n\n**Positioning Strategy:**\n\nHow to position yourself in the target market\n\n**Competitive Advantages:**\n\n- Advantage1\n- Advantage2\n- Advantage3",
-    "long_term_roadmap": "**6-Month Milestone:**\n\nSpecific goals and deliverables\n\n**1-Year Milestone:**\n\nMeasurable outcomes and achievements\n\n**2-Year Vision:**\n\nStrategic objectives and career destination",
-    "success_metrics": "**Key Metrics to Track:**\n\n- Metric 1 for tracking progress\n- Metric 2 for measuring impact\n- Metric 3 for evaluating success\n\n**Measurement Strategy:**\n\nHow and when to evaluate these metrics",
-    "guidance_notes": "Additional insights and personalized advice, including how any specific user instructions were addressed"
-}}"""
+**Output Format (Markdown):**
+
+# Career Guidance Report
+
+## 📋 Guidance Summary
+[Provide a comprehensive overview of key career recommendations based on user query and profile]
+
+## 🚀 Immediate Actions to Take
+
+### Action 1: [Action Title]
+- **Steps:** [Clear implementation steps]
+- **Timeline:** [Expected timeframe]
+- **Expected Outcome:** [What to expect]
+
+### Action 2: [Action Title]  
+- **Steps:** [Implementation guidance]
+- **Timeline:** [Expected timeframe]
+- **Expected Outcome:** [What to expect]
+
+### Action 3: [Action Title]
+- **Steps:** [Implementation guidance] 
+- **Timeline:** [Expected timeframe]
+- **Expected Outcome:** [What to expect]
+
+## 🎯 Priority Skills to Develop
+
+**Top Skills:** Skill1, Skill2, Skill3
+
+**Learning Resources:**
+- Resource1 - [Brief description]
+- Resource2 - [Brief description] 
+- Resource3 - [Brief description]
+
+**Skill Building Strategy:**
+[Comprehensive plan for acquiring priority skills with specific steps and timeline]
+
+## 🤝 Networking Strategy
+
+**Target Connections:**
+- Connection type 1
+- Connection type 2  
+- Connection type 3
+
+**Networking Activities:**
+- Activity1 - [Implementation details]
+- Activity2 - [Implementation details]
+- Activity3 - [Implementation details]
+
+**Networking Goals:**
+[Specific networking objectives and expected outcomes]
+
+## 💼 Market Positioning
+
+**Your Value Proposition:**
+[Clear statement of unique professional value]
+
+**Positioning Strategy:**
+[How to position yourself in the target market]
+
+**Competitive Advantages:**
+- Advantage1
+- Advantage2
+- Advantage3
+
+## 🗺️ Long-Term Career Roadmap
+
+### 6-Month Milestone
+[Specific goals and deliverables]
+
+### 1-Year Milestone  
+[Measurable outcomes and achievements]
+
+### 2-Year Vision
+[Strategic objectives and career destination]
+
+## 📊 Success Metrics to Track
+
+**Key Performance Indicators:**
+- Metric 1 for tracking progress
+- Metric 2 for measuring impact
+- Metric 3 for evaluating success
+
+**Measurement Strategy:**
+[How and when to evaluate these metrics]
+
+## 💡 Additional Insights
+[Additional insights and personalized advice, including how any specific user instructions were addressed]"""
         )
     )

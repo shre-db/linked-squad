@@ -1,7 +1,7 @@
 __module_name__ = "state_schema"
 
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any, List, Literal
+from typing import Optional, Dict, Any, List, Literal, Union
 
 # Define the possible actions the router_node can decide on
 RouterAction = Literal[
@@ -47,15 +47,15 @@ class ProfileBotState(BaseModel):
     linkedin_data: Optional[Dict[str, Any]] = Field(None, description="Parsed LinkedIn profile data from scraping.")                                                                                                         # none - This is set programmatically after scraping the data/ loading from a file (e.g., JSON)
 
     # 3. Agent Outputs / Processed Data
-    profile_analysis_report: Optional[Dict[str, Any]] = Field(None, description="Detailed analysis report from the Profile Analyzer. Should be structured (dict).")                                                          # analyze_node | rewrite_node | job_fit_node | guide_node: The first one sets it, others read it for their respective tasks
-    content_rewrites_suggestions: Optional[Dict[str, Any]] = Field(None, description="List of suggested content rewrites from Content Rewriter.")                                                                            # rewrite_node - sets this state programmatically
-    job_fit_evaluation_report: Optional[Dict[str, Any]] = Field(None, description="Report from Job Fit Evaluator, including score, gaps, etc. Should be structured (dict).")                                                 # job_fit_node - sets this state programmatically
-    career_guidance_notes: Optional[Dict[str, Any]] = Field(None, description="Structured guidance points/recommendations from Career Guide.")                                                                               # guide_node - sets this state programmatically
+    profile_analysis_report: Optional[str] = Field(None, description="Detailed analysis report from the Profile Analyzer in markdown format.")                                                          # analyze_node | rewrite_node | job_fit_node | guide_node: The first one sets it, others read it for their respective tasks
+    content_rewrites_suggestions: Optional[str] = Field(None, description="Content rewrite suggestions from Content Rewriter in markdown format.")                                                                            # rewrite_node - sets this state programmatically
+    job_fit_evaluation_report: Optional[str] = Field(None, description="Job fit evaluation report in markdown format, including score, gaps, etc.")                                                 # job_fit_node - sets this state programmatically
+    career_guidance_notes: Optional[str] = Field(None, description="Career guidance recommendations in markdown format.")                                                                               # guide_node - sets this state programmatically
 
     # 4. Control Flags & Workflow State
     current_router_action: Optional[RouterAction] = Field(None, description="The current action the router has decided upon (e.g., CALL_ANALYZE, RESPOND_DIRECTLY).")                                                         # router_node - state set by the LLM                                       
     last_agent_called: Optional[AgentType] = Field(None, description="Stores which specialized agent was last invoked. Useful for conversational context.")                                                                   # router_node - state set by the LLM
-    pending_agent_output: Optional[Dict[str, Any]] = Field(None, description="Raw output from specialized agent waiting for router processing.")                                                                              # analyze_node | rewrite_node | job_fit_node | guide_node | process_agent_output_node - First 4 writes programatically, last one reads for post-processing.
+    pending_agent_output: Optional[Union[Dict[str, Any], str]] = Field(None, description="Raw output from specialized agent waiting for router processing. Can be JSON dict (routing) or markdown string (specialized agents).")                                                                              # analyze_node | rewrite_node | job_fit_node | guide_node | process_agent_output_node - First 4 writes programatically, last one reads for post-processing.
     needs_output_processing: bool = Field(False, description="Flag: True if agent output needs router interpretation before user response.")                                                                                  # analyze_node | rewrite_node | job_fit_node | guide_node | process_agent_output_node - All nodes sets the states programatically, first 4 sets True, last one sets False
     is_profile_analyzed: bool = Field(False, description="Flag: True if profile analysis has been successfully completed.")                                                                                                   # router_node - state set by the LLM
     awaiting_user_confirmation: bool = Field(False, description="Flag: True if the bot is waiting for a 'yes/no' or specific confirmation from the user.")                                                                    # router_node - state set by the LLM

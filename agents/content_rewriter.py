@@ -2,7 +2,7 @@ __module_name__ = "content_rewriter"
 
 from backend.llm import get_chat_model
 from backend.prompts.content_rewriting import get_prompt
-from .utils import parse_llm_response, validate_required_params
+from .utils import parse_markdown_response, validate_required_params
 from typing import Dict, Optional, Any
 
 class ContentRewriterAgent:
@@ -11,7 +11,7 @@ class ContentRewriterAgent:
         self.prompt_template = get_prompt()
 
     def rewrite(self, current_content: dict, profile_analysis_report: dict, target_role: Optional[str] = None, 
-                user_instructions: Optional[Dict[str, Any]] = None, conversation_context: Optional[str] = None) -> Dict[str, any]:
+                user_instructions: Optional[Dict[str, Any]] = None, conversation_context: Optional[str] = None) -> str:
         validate_required_params(
             current_content=current_content,
             profile_analysis_report=profile_analysis_report
@@ -42,4 +42,4 @@ class ContentRewriterAgent:
         print("=" * 80)
         print(response.content if hasattr(response, 'content') else str(response))
         print("=" * 80)
-        return parse_llm_response(response)
+        return parse_markdown_response(response)

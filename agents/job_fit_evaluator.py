@@ -2,7 +2,7 @@ __module_name__ = "job_fit_evaluator"
 
 from backend.llm import get_chat_model
 from backend.prompts.job_fit import get_prompt
-from .utils import parse_llm_response, validate_required_params
+from .utils import parse_markdown_response, validate_required_params
 from typing import Optional, Dict, Any
 
 class JobFitEvaluatorAgent:
@@ -11,7 +11,7 @@ class JobFitEvaluatorAgent:
         self.prompt_template = get_prompt()
 
     def evaluate_fit(self, profile_analysis_report, job_description, user_instructions: Optional[Dict[str, Any]] = None, 
-                     conversation_context: Optional[str] = None):
+                     conversation_context: Optional[str] = None) -> str:
         validate_required_params(
             profile_analysis_report=profile_analysis_report,
             job_description=job_description
@@ -41,4 +41,4 @@ class JobFitEvaluatorAgent:
         print("=" * 80)
         print(response.content if hasattr(response, 'content') else str(response))
         print("=" * 80)
-        return parse_llm_response(response)
+        return parse_markdown_response(response)

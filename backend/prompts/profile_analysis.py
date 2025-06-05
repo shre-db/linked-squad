@@ -23,27 +23,86 @@ Conduct a thorough evaluation covering:
 **IMPORTANT: Follow any specific user instructions provided in the additional context above.**
 
 **Critical Requirements:**
-- Your response MUST be ONLY valid JSON - no other text before or after
-- Do not wrap the JSON in markdown code blocks
-- Do not add explanatory text before or after the JSON
-- Ensure all strings are properly escaped (use \\" for quotes within strings)
-- Use proper JSON syntax with correct commas, quotes, and brackets
-- Keep string values concise to avoid token limits
-- Ensure all arrays and objects are properly closed
-- Double-check your JSON syntax before responding
+- Respond in well-structured markdown format that can be easily rendered in the UI
+- Use proper markdown formatting with clear headers, bullet points, and sections
+- Provide actionable insights and specific recommendations
+- Include both strengths and improvement opportunities
+- Base analysis on LinkedIn profile best practices and industry standards
 
-**Output Format - Respond with ONLY this JSON structure:**
-{{
-    "analysis_summary": "Brief overview of profile strengths and key improvement areas",
-    "strengths": "**Key Strengths:**\n\n- Specific strength 1\n- Specific strength 2\n- Specific strength 3",
-    "improvement_opportunities": "**Areas for Improvement:**\n\n**Gap 1:** Specific gap with actionable recommendation\n\n**Gap 2:** Specific gap with clear improvement strategy\n\n**Gap 3:** Specific gap with implementation guidance",
-    "keyword_analysis": "**Current Keywords:**\n\nkeyword1, keyword2, keyword3\n\n**Missing Keywords:**\n\nmissing1, missing2, missing3\n\n**Optimization Strategy:**\n\nBrief strategy for improving keyword presence",
-    "achievement_assessment": "**Achievement Quantification:**\n\nQuantified: 0 out of 0 total achievements\n\n**Quantification Opportunities:**\n\n- Opportunity 1\n- Opportunity 2",
-    "overall_score": 85,
-    "priority_actions": "**Top Priority Actions:**\n\n**Action 1:** Highest priority action\n\n**Action 2:** Second priority action\n\n**Action 3:** Third priority action",
-    "analysis_notes": "Additional insights and personalized recommendations"
-}}
+**Output Format (Markdown):**
 
-Remember: Return ONLY the JSON object above with your analysis data. No explanatory text, no markdown formatting, just the raw JSON."""
+# LinkedIn Profile Analysis Report
+
+## 📊 Analysis Summary
+[Brief overview of profile strengths and key improvement areas]
+
+## ✅ Key Strengths
+- Specific strength 1 with details
+- Specific strength 2 with context
+- Specific strength 3 with impact
+
+## 🎯 Areas for Improvement
+
+### Gap 1: [Specific Gap Title]
+**Issue:** [Description of the gap]
+**Recommendation:** [Actionable improvement strategy]
+**Impact:** [Expected benefit of addressing this gap]
+
+### Gap 2: [Specific Gap Title]
+**Issue:** [Description of the gap]  
+**Recommendation:** [Clear improvement strategy]
+**Impact:** [Expected benefit of addressing this gap]
+
+### Gap 3: [Specific Gap Title]
+**Issue:** [Description of the gap]
+**Recommendation:** [Implementation guidance]
+**Impact:** [Expected benefit of addressing this gap]
+
+## 🔍 Keyword Analysis
+
+**Current Keywords:** keyword1, keyword2, keyword3, keyword4
+
+**Missing Keywords:** missing1, missing2, missing3
+
+**Optimization Strategy:**
+[Brief strategy for improving keyword presence and discoverability]
+
+## 📈 Achievement Assessment
+
+**Achievement Quantification Status:** X out of Y total achievements are quantified
+
+**Quantification Opportunities:**
+- Opportunity 1: [Specific area where numbers/metrics can be added]
+- Opportunity 2: [Specific area where impact can be quantified]
+- Opportunity 3: [Specific area where results can be measured]
+
+## 🏆 Overall Profile Score: X/100
+
+### Score Breakdown:
+- **Content Quality:** X/100
+- **Keyword Optimization:** X/100  
+- **Achievement Quantification:** X/100
+- **Profile Completeness:** X/100
+- **Professional Positioning:** X/100
+
+## 🚀 Priority Actions
+
+### Action 1: [Highest Priority Action]
+**Why:** [Explanation of importance]
+**How:** [Implementation steps]
+**Timeline:** [Suggested timeframe]
+
+### Action 2: [Second Priority Action]  
+**Why:** [Explanation of importance]
+**How:** [Implementation steps]
+**Timeline:** [Suggested timeframe]
+
+### Action 3: [Third Priority Action]
+**Why:** [Explanation of importance]
+**How:** [Implementation steps]  
+**Timeline:** [Suggested timeframe]
+
+## 💡 Additional Insights
+[Additional insights and personalized recommendations based on the profile analysis]"""
         )
     )

@@ -143,6 +143,52 @@ def parse_llm_response(response):
         logger.error(f"Response content (first 500 chars): {str(original_response)[:500]}")
         raise ValueError(f"Failed to parse LLM response: {e}")
 
+def parse_markdown_response(response):
+    """
+    Parse LLM response for markdown content from specialized agents.
+    
+    Args:
+        response: The response from the LLM (can be string or object with .content attribute)
+        
+    Returns:
+        str: Clean markdown content
+        
+    Raises:
+        ValueError: If response is empty or invalid
+    """
+    try:
+        # Handle response objects with content attribute
+        if hasattr(response, "content"):
+            response = response.content
+            
+        # Convert to string if not already
+        if not isinstance(response, str):
+            response = str(response)
+            
+        response = response.strip()
+        
+        if not response:
+            raise ValueError("Empty response from LLM")
+        
+        # Clean up common markdown formatting issues
+        # Remove any leading/trailing code blocks if present
+        if response.startswith("```") and response.endswith("```"):
+            lines = response.split('\n')
+            if len(lines) > 2:
+                response = '\n'.join(lines[1:-1]).strip()
+        
+        # Remove any markdown code block indicators that might have been included
+        response = re.sub(r'^```markdown\s*\n', '', response, flags=re.MULTILINE)
+        response = re.sub(r'^```\s*$', '', response, flags=re.MULTILINE)
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error parsing markdown response: {e}")
+        logger.error(f"Original response type: {type(response)}")
+        logger.error(f"Response content (first 500 chars): {str(response)[:500] if response else 'None'}")
+        raise ValueError(f"Failed to parse markdown response: {e}")
+
 def validate_required_params(**kwargs):
     for param_name, param_value in kwargs.items():
         if param_value is None:
