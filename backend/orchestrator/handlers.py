@@ -161,8 +161,8 @@ def analyze_node(state: ProfileBotState) -> ProfileBotState:
             conversation_context=state.conversation_context
         )
         
-        # Validate that we got a proper result
-        if not result or not isinstance(result, dict):
+        # Validate that we got a proper result (ProfileAnalyzerAgent returns markdown string)
+        if not result or not isinstance(result, str):
             error_msg = "Profile analysis failed to produce valid results. Please try again."
             log_error("profile_analyzer", f"Invalid analysis result: {type(result)}")
             state.error_message = error_msg
