@@ -3,7 +3,7 @@
 > **An AI-powered career assistant that transforms your LinkedIn profile, evaluates job fit, and guides your job search with smart, personalized insights.**
 
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://python.org)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3.25-green.svg)](https://langchain.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.4.7-purple.svg)](https://langgraph.com)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.45.1-red.svg)](https://streamlit.io)
@@ -59,7 +59,7 @@ This project uses a sophisticated multi-agent architecture built with **LangGrap
 
 ### **Technical Stack**
 - **Backend**: Python 3.12+ with LangChain & LangGraph
-- **AI Model**: Google Gemini 1.5 Flash for natural language processing
+- **AI Model**: Google Gemini 2.5 Flash for natural language processing
 - **Frontend**: Streamlit web application with modern UI
 - **State Management**: Pydantic models with type safety
 - **Memory**: LangGraph checkpointing for conversation persistence
@@ -119,7 +119,7 @@ In your project's root directory:
 PYTHONPATH=. streamlit run app/streamlit_app.py
 
 # Legacy terminal interface (deprecated)
-PYTHONPATH=. python app/deprecated_terminal_app.py
+PYTHONPATH=. python app/deprecated_terminal_app.py #(Do not run this!)
 ```
 
 ## Docker Setup Guide
@@ -293,9 +293,7 @@ linked-squad/
 ├── docker-compose.yml    # Docker Compose configuration
 ├── Dockerfile.venv       # Container configuration (recommended)
 ├── Dockerfile.conda      # Alternative container configuration
-├── environment.yaml      # Conda environment
 ├── requirements.txt      # Python dependencies
-├── environment.yaml      # Conda environment file
 ├── .env.example          # Example environment variables
 ├── .gitignore            # Git ignore file
 ├── .dockerignore         # Docker ignore file 
@@ -350,4 +348,4 @@ model = ChatGoogleGenerativeAI(
 ---
 
 
-> Transform your LinkedIn presence and accelerate your career with AI-powered insights! 🚀
+> Transform your LinkedIn presence and accelerate your career with AI-powered insights!
