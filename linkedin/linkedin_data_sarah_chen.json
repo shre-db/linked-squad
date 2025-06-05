@@ -1,0 +1,288 @@
+{
+    "url": "https://www.linkedin.com/in/sarah-chen-architect/",
+    "about": "Senior Software Architect with 15+ years of experience designing and implementing large-scale distributed systems. Passionate about cloud architecture, microservices, and building high-performance teams. I specialize in system design, DevOps practices, and digital transformation initiatives. Currently leading architectural decisions for enterprise-level applications serving millions of users.",
+    "premium": true,
+    "influencer": "micro",
+    "creator": "thought_leader",
+    "pronoun": "She/Her",
+    "creator_hashtags": ["#CloudArchitecture", "#SystemDesign", "#TechLeadership"],
+    "creator_website": {
+      "text": "Tech Insights Blog",
+      "link": "https://sarahchen.tech"
+    },
+    "phonenumbers": ["+1-555-0123"],
+    "email": "sarah.chen@techmail.com",
+    "lastName": "Chen",
+    "firstName": "Sarah",
+    "headline": "Senior Software Architect | Cloud Expert | Building Scalable Systems at Fortune 500 Companies",
+    "birthday_ddmm": "15-03",
+    "social_accounts": {
+      "twitter": "https://twitter.com/sarahtech",
+      "github": "https://github.com/sarah-chen-arch"
+    },
+    "websites": [
+      {
+        "text": "Personal Portfolio",
+        "link": "https://sarahchen.dev"
+      }
+    ],
+    "location": "San Francisco, California, United States",
+    "followers": 8500,
+    "connections": 3200,
+    "volunteer": [
+      {
+        "organization": "Girls Who Code",
+        "role": "Mentor",
+        "duration": "2019-present",
+        "description": "Mentoring young women entering tech careers"
+      },
+      {
+        "organization": "Code.org",
+        "role": "Curriculum Reviewer",
+        "duration": "2020-2022",
+        "description": "Reviewed computer science curriculum for K-12 education"
+      }
+    ],
+    "profile_picture": "https://media.licdn.com/dms/image/v2/D4E03AQFHYv61mAZX2w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1723101833829?e=1738195200&v=beta&t=8dI9EzfEHhU6XVxZU__3F9yT1arN7riHsNBuVSlZHD5",
+    "profile_picture_expiresAt": "30-01-2030",
+    "profile_picture_type": "PROFESSIONAL",
+    "profile_picture_saturation": "0.1",
+    "profile_picture_brightness": "0.05",
+    "profile_picture_contrast": "0.1",
+    "languages": [
+      {
+        "language": "English",
+        "level": "Native or bilingual proficiency"
+      },
+      {
+        "language": "Mandarin Chinese",
+        "level": "Native or bilingual proficiency"
+      },
+      {
+        "language": "Spanish",
+        "level": "Elementary proficiency"
+      }
+    ],
+    "education": [
+      {
+        "months_duration": "",
+        "start_date": "2015",
+        "end_date": "2017",
+        "description": "Master of Science in Computer Science with focus on distributed systems and software architecture. Thesis: 'Optimizing Microservice Communication Patterns for High-Throughput Applications'. GPA: 3.9/4.0",
+        "title": "Stanford University",
+        "company": "Master's Degree, Computer Science",
+        "company_linkedin": "https://www.linkedin.com/school/stanford-university/",
+        "location": "Stanford, California, United States"
+      },
+      {
+        "months_duration": "",
+        "start_date": "2003",
+        "end_date": "2007",
+        "description": "Bachelor of Science in Computer Engineering. Senior capstone project on real-time embedded systems. Dean's List for 6 semesters. President of ACM Student Chapter.",
+        "title": "University of California, Berkeley",
+        "company": "Bachelor's Degree, Computer Engineering",
+        "company_linkedin": "https://www.linkedin.com/school/uc-berkeley/",
+        "location": "Berkeley, California, United States"
+      }
+    ],
+    "experience": [
+      {
+        "months_duration": "36",
+        "start_date": "06-2022",
+        "end_date": "present",
+        "description": "Leading architecture design for cloud-native applications serving 50M+ users. Spearhead migration from monolithic to microservices architecture, resulting in 40% improvement in system performance. Manage team of 12 senior engineers and architects. Collaborate with C-suite executives on technology strategy and digital transformation initiatives.",
+        "title": "Principal Software Architect",
+        "company": "Meta",
+        "company_linkedin": "https://www.linkedin.com/company/meta/",
+        "location": "Menlo Park, California, United States"
+      },
+      {
+        "months_duration": "48",
+        "start_date": "08-2018",
+        "end_date": "06-2022",
+        "description": "Designed and implemented scalable cloud infrastructure supporting $2B+ in annual revenue. Led cross-functional teams of 20+ engineers in delivering critical platform features. Established DevOps practices and CI/CD pipelines that reduced deployment time by 70%. Mentored 15+ junior and mid-level engineers.",
+        "title": "Senior Software Architect",
+        "company": "Salesforce",
+        "company_linkedin": "https://www.linkedin.com/company/salesforce/",
+        "location": "San Francisco, California, United States"
+      },
+      {
+        "months_duration": "30",
+        "start_date": "03-2016",
+        "end_date": "08-2018",
+        "description": "Architected high-availability systems processing 1M+ transactions per day. Implemented monitoring and alerting solutions that improved system uptime to 99.99%. Led technical design reviews and established coding standards across engineering teams.",
+        "title": "Staff Software Engineer",
+        "company": "Uber",
+        "company_linkedin": "https://www.linkedin.com/company/uber-com/",
+        "location": "San Francisco, California, United States"
+      },
+      {
+        "months_duration": "42",
+        "start_date": "01-2012",
+        "end_date": "03-2016",
+        "description": "Developed distributed systems and APIs for enterprise clients. Built automated testing frameworks that increased code coverage by 80%. Collaborated with product managers and designers to deliver user-centric solutions.",
+        "title": "Senior Software Engineer",
+        "company": "Google",
+        "company_linkedin": "https://www.linkedin.com/company/google/",
+        "location": "Mountain View, California, United States"
+      },
+      {
+        "months_duration": "54",
+        "start_date": "07-2007",
+        "end_date": "01-2012",
+        "description": "Designed and developed web applications using Java and Spring framework. Optimized database queries resulting in 50% performance improvement. Participated in agile development processes and code reviews.",
+        "title": "Software Engineer",
+        "company": "Oracle",
+        "company_linkedin": "https://www.linkedin.com/company/oracle/",
+        "location": "Redwood City, California, United States"
+      }
+    ],
+    "social_activity": [
+      {
+        "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7260000000000000101",
+        "nb_comments": 45,
+        "nb_likes": 320,
+        "reacted": null,
+        "date": "2024-11-25 08:00:00.000000",
+        "days_from_today": 1,
+        "timestamp": 1732521600.0
+      },
+      {
+        "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7260000000000000102",
+        "nb_comments": 32,
+        "nb_likes": 285,
+        "reacted": null,
+        "date": "2024-11-18 16:30:00.000000",
+        "days_from_today": 8,
+        "timestamp": 1731936600.0
+      },
+      {
+        "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7260000000000000103",
+        "nb_comments": 28,
+        "nb_likes": 195,
+        "reacted": null,
+        "date": "2024-11-05 11:15:00.000000",
+        "days_from_today": 21,
+        "timestamp": 1730806500.0
+      },
+      {
+        "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7260000000000000104",
+        "nb_comments": 15,
+        "nb_likes": 142,
+        "reacted": null,
+        "date": "2024-10-28 09:45:00.000000",
+        "days_from_today": 29,
+        "timestamp": 1729851900.0
+      }
+    ],
+    "skills": [
+      {
+        "name": "System Architecture",
+        "endorsements": 95
+      },
+      {
+        "name": "Cloud Computing",
+        "endorsements": 88
+      },
+      {
+        "name": "Microservices",
+        "endorsements": 82
+      },
+      {
+        "name": "AWS",
+        "endorsements": 75
+      },
+      {
+        "name": "Kubernetes",
+        "endorsements": 70
+      },
+      {
+        "name": "DevOps",
+        "endorsements": 68
+      },
+      {
+        "name": "Java",
+        "endorsements": 65
+      },
+      {
+        "name": "Python",
+        "endorsements": 58
+      },
+      {
+        "name": "Docker",
+        "endorsements": 55
+      },
+      {
+        "name": "Software Engineering",
+        "endorsements": 52
+      },
+      {
+        "name": "Technical Leadership",
+        "endorsements": 48
+      },
+      {
+        "name": "Distributed Systems",
+        "endorsements": 45
+      },
+      {
+        "name": "REST APIs",
+        "endorsements": 42
+      },
+      {
+        "name": "GraphQL",
+        "endorsements": 35
+      },
+      {
+        "name": "Terraform",
+        "endorsements": 32
+      }
+    ],
+    "certifications": [
+      {
+        "name": "AWS Certified Solutions Architect - Professional",
+        "issuer": "Amazon Web Services",
+        "date": "2023-08-15",
+        "expiry": "2026-08-15"
+      },
+      {
+        "name": "Certified Kubernetes Administrator (CKA)",
+        "issuer": "Cloud Native Computing Foundation",
+        "date": "2022-11-20",
+        "expiry": "2025-11-20"
+      },
+      {
+        "name": "Google Cloud Professional Cloud Architect",
+        "issuer": "Google Cloud",
+        "date": "2021-06-10",
+        "expiry": "2024-06-10"
+      }
+    ],
+    "publications": [
+      {
+        "title": "Scaling Microservices: Patterns and Anti-patterns",
+        "publisher": "IEEE Software",
+        "date": "2023-09-15",
+        "url": "https://ieeexplore.ieee.org/document/example123"
+      },
+      {
+        "title": "Cloud-Native Architecture: A Practical Guide",
+        "publisher": "ACM Computing Surveys",
+        "date": "2022-03-22",
+        "url": "https://dl.acm.org/doi/example456"
+      }
+    ],
+    "speaking_engagements": [
+      {
+        "event": "AWS re:Invent 2023",
+        "title": "Building Resilient Distributed Systems",
+        "date": "2023-11-28",
+        "location": "Las Vegas, NV"
+      },
+      {
+        "event": "KubeCon + CloudNativeCon",
+        "title": "Kubernetes at Scale: Lessons Learned",
+        "date": "2023-04-18",
+        "location": "Amsterdam, Netherlands"
+      }
+    ]
+}

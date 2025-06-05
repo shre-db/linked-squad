@@ -1,6 +1,6 @@
 {
     "url": "https://www.linkedin.com/in/arjun-srivastava-ml/",
-    "about": "With a background in Physics, Mechanical Engineering and data science, I specialize in applying artificial intelligence to solve real world problems. My expertise includes machine learning, deep learning, programming with Python and Julia, applied mathematics, and frameworks such as PyTorch, LangChain, LangGraph and HuggingFace.",
+    "about": "With a background in Physics, Mechanical Engineering, and Data Science, I specialize in applying artificial intelligence to solve real-world problems. My expertise includes machine learning, deep learning, programming with Python and Julia, applied mathematics, and frameworks such as PyTorch, LangChain, LangGraph, and Hugging Face.",
     "premium": false,
     "influencer": "",
     "creator": "",
@@ -14,7 +14,7 @@
     "email": "arjun.srivastava@gmail.com",
     "lastName": "Srivastava",
     "firstName": "Arjun",
-    "headline": "Deep Learning Engineer | Interested in Physics, Artificial Intelligence and Scientific Computing",
+    "headline": "Deep Learning Engineer | Interested in Physics, Artificial Intelligence, and Scientific Computing",
     "birthday_ddmm": "26-09",
     "social_accounts": {},
     "websites": [],
@@ -47,7 +47,7 @@
         "months_duration": "",
         "start_date": "2017",
         "end_date": "2021",
-        "description": "Bachelor's of Engineering in Mechanical. Built strong foundation in engineering principles and applied mathematics. Developed skills in Python programming and data analysis.",
+        "description": "Bachelor's degree in Mechanical Engineering. Built a strong foundation in engineering principles and applied mathematics. Developed skills in Python programming and data analysis.",
         "title": "NMAM Institute of Technology",
         "company": "Bachelor’s Degree, Mechanical Engineering",
         "company_linkedin": "https://www.linkedin.com/school/nmam-institute-of-technology/",
@@ -62,14 +62,14 @@
         "description": "Developed and deployed machine learning models for various applications. Worked on deep learning projects involving computer vision and generative models such as GANs. Collaborated with cross-functional teams to deliver AI solutions.",
         "title": "Deep Learning Research Engineer",
         "company": "AMD",
-        "company_linkedin": "https://www.linkedin.com/company/hex-pixelphant/",
+        "company_linkedin": "https://www.linkedin.com/company/amd/",
         "location": "Bengaluru, Karnataka, India"
       },
       {
         "months_duration": "13",
         "start_date": "09-2022",
         "end_date": "12-2023",
-        "description": "Worked on a machine learning project that involved researching and analysing coal usage in the united states from 2001 to 2021. Used data science techniques to extract insights and build predictive models. Developed a web application to visualize the data and predictions.",
+        "description": "Worked on a machine learning project involving research and analysis of coal usage in the United States from 2001 to 2021. Used data science techniques to extract insights and build predictive models. Developed a web application to visualize the data and predictions.",
         "title": "Independent Researcher",
         "company": null,
         "company_linkedin": null,
@@ -79,7 +79,7 @@
         "months_duration": "11",
         "start_date": "09-2021",
         "end_date": "10-2022",
-        "description": "Developed vendor rating automation system that improved procurement efficiency. Interacted with cross-functional teams to gather requirements and deliver solutions.",
+        "description": "Developed a vendor rating automation system that improved procurement efficiency. Interacted with cross-functional teams to gather requirements and deliver solutions.",
         "title": "Graduate Engineer Trainee",
         "company": "Denso Kirloskar Industries",
         "company_linkedin": "https://www.linkedin.com/company/denso-kirloskar-industries/",
@@ -91,7 +91,7 @@
         "end_date": "09-2021",
         "description": "Internship focused on applying mechanical design principles to develop innovative solutions in product design. Assisted in creating prototypes and conducting design reviews.",
         "title": "Design Engineer Intern",
-        "company": "Bang Design pvt ltd",
+        "company": "Bang Design Pvt Ltd",
         "company_linkedin": "https://www.linkedin.com/company/bang-design-pvt-ltd/",
         "location": "Bengaluru, Karnataka, India"
       },
@@ -99,7 +99,7 @@
         "months_duration": "3",
         "start_date": "02-2021",
         "end_date": "05-2021",
-        "description": "Internship focused on research in Piezo-hydraulic based high-precision pump. Published a paper on the design and application of the pump in fluid dynamics.",
+        "description": "Internship focused on research into a piezo-hydraulic-based high-precision pump. Published a paper on the design and application of the pump in fluid dynamics.",
         "title": "Research Intern",
         "company": "WAAM Technologies",
         "company_linkedin": "https://www.linkedin.com/company/waam-technologies/",
@@ -177,7 +177,7 @@
         "endorsements": 5
       },
       {
-        "name": "HuggingFace",
+        "name": "Hugging Face",
         "endorsements": 5
       }
     ]

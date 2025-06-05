@@ -4,12 +4,12 @@
 
 
 TODO:
-1. Improve UI for data clearance, API keys, and other configurations
-2. Provide more mock profiles and job descriptions for testing
-2. Deploy on Streamlit
-3. Add Docker support
-4. Add Apify integration for LinkedIn scraping
+1. Improve UI for data clearance, API keys, and other configurations ✅
+2. Provide more mock profiles and job descriptions for testing ✅
+3. Deploy on Streamlit ✅
+4. Add Docker support 
 5. Review and optimize code structure
+6. Add Apify integration for LinkedIn scraping
 
 
 
@@ -283,7 +283,7 @@ python app/main.py
 - [ ] **Web Scraping Integration**: Real LinkedIn profile data via Apify
 - [x] **Streamlit Web Interface**: User-friendly web application
 - [ ] **Database Integration**: Persistent data storage
-- [ ] **Advanced Analytics**: Profile optimization trends and insights
+- [x] **Advanced Analytics**: Profile optimization trends and insights
 - [ ] **Export Features**: PDF reports and profile suggestions
 - [ ] **Multi-language Support**: International profile optimization
 
