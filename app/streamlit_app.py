@@ -1130,8 +1130,8 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         col1, col2, col3, col4 = st.columns(4, gap="small")
         
         with col1:
-            if st.button("Demo Profile", key="demo_btn", help="Load John Smith demo profile", use_container_width=True):
-                demo_url = "https://www.linkedin.com/in/johnsmith"
+            if st.button("Demo Profile", key="demo_btn", help="Load Michael Rodriguez demo profile", use_container_width=True):
+                demo_url = "https://www.linkedin.com/in/michael-rodriguez-cfa/"
                 self._handle_user_input(demo_url)
         
         with col2:
