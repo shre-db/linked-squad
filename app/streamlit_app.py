@@ -91,6 +91,9 @@ class LinkedInGenieStreamlit:
         if 'show_logout_dialog' not in st.session_state:
             st.session_state.show_logout_dialog = False
         
+        if 'show_invalid_profile_dialog' not in st.session_state:
+            st.session_state.show_invalid_profile_dialog = False
+        
         # Apply custom styling
         self._apply_custom_styling()
 
@@ -626,25 +629,67 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                     st.session_state.show_logout_dialog = True
                     st.rerun()
 
+    def _validate_linkedin_url(self, user_input):
+        """Validate if LinkedIn URL contains valid keywords"""
+        valid_keywords = ["arjun-srivastava-ml", "michael-rodriguez-cfa", "sarah-chen-architect"]
+        
+        # Check if input contains a LinkedIn URL
+        if "linkedin.com/in/" in user_input:
+            # Check if any of the valid keywords are in the URL
+            for keyword in valid_keywords:
+                if keyword in user_input:
+                    return True
+            return False
+        return True  # Not a LinkedIn URL, so no validation needed
+
+    def _show_invalid_profile_dialog(self):
+        """Show dialog when LinkedIn profile is not found"""
+        @st.dialog("LinkedIn Profile Not Found")
+        def profile_not_found():
+            st.warning("**User not found**", icon=":material/person_off:")
+            
+            st.markdown("The LinkedIn profile you entered is not available in our system.")
+            st.markdown("")
+            st.markdown("**Please try one of the following URLs:**")
+            
+            # Show the valid URLs
+            valid_urls = [
+                "https://www.linkedin.com/in/arjun-srivastava-ml/",
+                "https://www.linkedin.com/in/michael-rodriguez-cfa/", 
+                "https://www.linkedin.com/in/sarah-chen-architect/"
+            ]
+            
+            for url in valid_urls:
+                st.markdown(f"• {url}")
+            
+            st.markdown("")
+            
+            col1, col2, col3 = st.columns([1, 1, 1])
+            with col2:
+                if st.button("OK", type="primary", use_container_width=True):
+                    st.session_state.show_invalid_profile_dialog = False
+                    st.rerun()
+        
+        profile_not_found()
+
     def _clear_all_data(self):
-        """Clear all session data and API keys for security"""
-        import os
+        """Clear all session data but preserve API keys for security"""
+        # Do not clear .env file - preserve API configuration as per requirements
+        # env_path = os.path.join(project_root, '.env')
+        # if os.path.exists(env_path):
+        #     try:
+        #         os.remove(env_path)
+        #     except Exception as e:
+        #         st.error(f"Error removing .env file: {e}")
         
-        # Clear .env file if it exists
-        env_path = os.path.join(project_root, '.env')
-        if os.path.exists(env_path):
-            try:
-                os.remove(env_path)
-            except Exception as e:
-                st.error(f"Error removing .env file: {e}")
+        # Do not clear environment variables - preserve API configuration
+        # os.environ.pop('GOOGLE_API_KEY', None)
+        # os.environ.pop('APIFY_API_TOKEN', None)
         
-        # Clear environment variables
-        os.environ.pop('GOOGLE_API_KEY', None)
-        os.environ.pop('APIFY_API_TOKEN', None)
-        
-        # Clear all session state
+        # Clear all session state except API key configuration
         for key in list(st.session_state.keys()):
-            del st.session_state[key]
+            if key not in ['api_keys_configured', 'api_keys_tested', 'keys_loaded_message_shown']:
+                del st.session_state[key]
     
     def _show_logout_dialog(self):
         """Show logout confirmation dialog"""
@@ -695,6 +740,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         # Initialize graph runner if not already done (after API keys are configured)
         if not self._initialize_graph_runner():
             return "Failed to initialize the assistant. Please check your API keys."
+        
+        # Validate LinkedIn URL before processing
+        if not self._validate_linkedin_url(user_input):
+            st.session_state.show_invalid_profile_dialog = True
+            return "Invalid LinkedIn profile URL. Please check the dialog for valid options."
         
         # Check if user provided a LinkedIn URL
         if "linkedin.com/in/" in user_input:
@@ -766,6 +816,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         # Handle logout dialog
         if st.session_state.get('show_logout_dialog', False):
             self._show_logout_dialog()
+            return
+        
+        # Handle invalid profile dialog
+        if st.session_state.get('show_invalid_profile_dialog', False):
+            self._show_invalid_profile_dialog()
             return
         
         # Check if API keys are configured
