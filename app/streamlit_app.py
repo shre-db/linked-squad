@@ -91,6 +91,9 @@ class LinkedInGenieStreamlit:
         if 'show_logout_dialog' not in st.session_state:
             st.session_state.show_logout_dialog = False
         
+        if 'show_invalid_profile_dialog' not in st.session_state:
+            st.session_state.show_invalid_profile_dialog = False
+        
         # Apply custom styling
         self._apply_custom_styling()
 
@@ -229,7 +232,15 @@ class LinkedInGenieStreamlit:
 
     def _check_existing_api_keys(self):
         """Check if API keys already exist and are valid"""
-        # First check environment variables. See if they might be loaded from .env
+        # Check if .env file exists first - if not, API keys are definitely not configured
+        env_path = os.path.join(project_root, '.env')
+        if not os.path.exists(env_path):
+            # Clear any existing environment variables that might be cached
+            os.environ.pop('GOOGLE_API_KEY', None)
+            os.environ.pop('APIFY_API_TOKEN', None)
+            return False
+        
+        # Check environment variables that might be loaded from .env
         google_key = os.getenv('GOOGLE_API_KEY')
         # apify_key = os.getenv('APIFY_API_TOKEN')  # Commented out for now
         
@@ -241,11 +252,6 @@ class LinkedInGenieStreamlit:
             
             if google_valid:  # and apify_valid (commented out)
                 return True
-        
-        # If not in environment, check .env file directly
-        env_path = os.path.join(project_root, '.env')
-        if not os.path.exists(env_path):
-            return False
         
         try:
             with open(env_path, 'r') as f:
@@ -626,11 +632,52 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                     st.session_state.show_logout_dialog = True
                     st.rerun()
 
-    def _clear_all_data(self):
-        """Clear all session data and API keys for security"""
-        import os
+    def _validate_linkedin_url(self, user_input):
+        """Validate if LinkedIn URL contains valid keywords"""
+        valid_keywords = ["arjun-srivastava-ml", "michael-rodriguez-cfa", "sarah-chen-architect"]
         
-        # Clear .env file if it exists
+        # Check if input contains a LinkedIn URL
+        if "linkedin.com/in/" in user_input:
+            # Check if any of the valid keywords are in the URL
+            for keyword in valid_keywords:
+                if keyword in user_input:
+                    return True
+            return False
+        return True  # Not a LinkedIn URL, so no validation needed
+
+    def _show_invalid_profile_dialog(self):
+        """Show dialog when LinkedIn profile is not found"""
+        @st.dialog("LinkedIn Profile Not Found")
+        def profile_not_found():
+            st.warning("**User not found**", icon=":material/person_off:")
+            
+            st.markdown("The LinkedIn profile you entered is not available in our system.")
+            st.markdown("")
+            st.markdown("**Please try one of the following URLs:**")
+            
+            # Show the valid URLs
+            valid_urls = [
+                "https://www.linkedin.com/in/arjun-srivastava-ml/",
+                "https://www.linkedin.com/in/michael-rodriguez-cfa/", 
+                "https://www.linkedin.com/in/sarah-chen-architect/"
+            ]
+            
+            for url in valid_urls:
+                st.markdown(f"• {url}")
+            
+            st.markdown("")
+            
+            col1, col2, col3 = st.columns([1, 1, 1])
+            with col2:
+                if st.button("OK", type="primary", use_container_width=True):
+                    st.session_state.show_invalid_profile_dialog = False
+                    st.rerun()
+        
+        profile_not_found()
+
+    def _clear_all_data(self):
+        """Clear all session data including API keys and .env file"""
+        # Clear .env file to remove stored API keys
         env_path = os.path.join(project_root, '.env')
         if os.path.exists(env_path):
             try:
@@ -638,11 +685,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
             except Exception as e:
                 st.error(f"Error removing .env file: {e}")
         
-        # Clear environment variables
+        # Clear environment variables to remove API keys from memory
         os.environ.pop('GOOGLE_API_KEY', None)
         os.environ.pop('APIFY_API_TOKEN', None)
         
-        # Clear all session state
+        # Clear all session state completely
         for key in list(st.session_state.keys()):
             del st.session_state[key]
     
@@ -695,6 +742,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         # Initialize graph runner if not already done (after API keys are configured)
         if not self._initialize_graph_runner():
             return "Failed to initialize the assistant. Please check your API keys."
+        
+        # Validate LinkedIn URL before processing
+        if not self._validate_linkedin_url(user_input):
+            st.session_state.show_invalid_profile_dialog = True
+            return "Invalid LinkedIn profile URL. Please check the dialog for valid options."
         
         # Check if user provided a LinkedIn URL
         if "linkedin.com/in/" in user_input:
@@ -768,6 +820,18 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
             self._show_logout_dialog()
             return
         
+        # Handle invalid profile dialog
+        if st.session_state.get('show_invalid_profile_dialog', False):
+            self._show_invalid_profile_dialog()
+            return
+        
+        # Double-check API keys are configured and .env file exists
+        # This ensures proper behavior after logout when .env file is deleted
+        env_path = os.path.join(project_root, '.env')
+        if not os.path.exists(env_path) or not st.session_state.api_keys_configured:
+            # Force re-check of API keys if .env file doesn't exist
+            st.session_state.api_keys_configured = self._check_existing_api_keys()
+            
         # Check if API keys are configured
         if not st.session_state.api_keys_configured:
             self._display_api_config_screen()
