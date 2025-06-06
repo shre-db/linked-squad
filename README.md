@@ -1,4 +1,4 @@
-# Linked Squad 🧞‍♂️
+# Linked Squad
 
 > **An AI-powered career assistant that transforms your LinkedIn profile, evaluates job fit, and guides your job search with smart, personalized insights.**
 
@@ -8,6 +8,8 @@
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.4.7-purple.svg)](https://langgraph.com)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.45.1-red.svg)](https://streamlit.io)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com)
+
+![Linked Squad Logo](./assets/linked-squad.png)
 
 ## Features
 
@@ -213,91 +215,51 @@ docker inspect <container_id> | grep Health  # Detailed health info
    DOCKER_BUILDKIT=1 docker build ...
    ```
 
-## Usage Examples
 
-### Basic Profile Analysis
-```
-You: https://www.linkedin.com/in/johnsmith
-Bot: I've completed analyzing your LinkedIn profile. Would you like me to suggest content improvements or evaluate job fit?
-
-PROFILE ANALYSIS REPORT
-Completeness Score: 85%
-Impact Score: 78%
-...
-```
-
-### Content Optimization
-```
-You: Can you help me rewrite my LinkedIn summary?
-Bot: I've generated optimized content suggestions for your LinkedIn profile...
-
-CONTENT SUGGESTIONS
-SUMMARY:
-Option 1: "Results-driven software engineer with 5+ years..."
-Option 2: "Passionate AI/ML engineer specializing in..."
-...
-```
-
-### Job Fit Evaluation
-```
-You: Software Engineer at Google - 5+ years Python, ML experience, cloud platforms...
-Bot: I've completed the job fit evaluation...
-
-JOB FIT EVALUATION
-Overall Fit Score: 85%
-Strong Alignment: Python, Machine Learning, Cloud Computing
-Missing Skills: Kubernetes, System Design
-...
-```
-
-### Career Guidance
-```
-You: How can I transition from data analyst to data scientist?
-Bot: I've provided personalized career guidance...
-
-CAREER GUIDANCE
-Skill Development: Focus on ML algorithms, Python libraries...
-Networking: Join ML communities, attend conferences...
-...
-```
 
 ## Project Structure
 
 ```
 linked-squad/
-├── agents/                 # AI agent implementations
-│   ├── router.py          # Conversation routing logic
-│   ├── profile_analyzer.py # LinkedIn profile analysis
-│   ├── content_rewriter.py # Content optimization
-│   ├── job_fit_evaluator.py # Job matching analysis
-│   └── career_guide.py    # Career guidance agent
-├── backend/               # Core backend services
-│   ├── orchestrator/      # LangGraph workflow management
-│   ├── prompts/          # AI prompt templates
-│   ├── llm.py            # Language model setup
-│   └── memory.py         # State persistence
-├── app/                  # User interface
-│   ├── streamlit_app.py  # Modern Streamlit web interface
-│   ├── deprecated_terminal_app.py # Legacy terminal interface
-│   ├── config.py         # App configuration
-│   └── ui_utils.py       # UI utility functions
-├── assets/               # UI assets and icons
-├── linkedin/             # LinkedIn data handling
-│   ├── profiles.py       # Mock profile data
-│   └── apify_scrapper.py # Initial Apify integration (not yet enabled)
-├── docs/                 # Documentation and schemas
+├── agents/                                                         # AI agent implementations
+│   ├── router.py                                                   # Conversation routing logic
+│   ├── profile_analyzer.py                                         # LinkedIn profile analysis
+│   ├── content_rewriter.py                                         # Content optimization
+│   ├── job_fit_evaluator.py                                        # Job matching analysis
+│   └── career_guide.py                                             # Career guidance agent
+├── backend/                                                        # Core backend services
+│   ├── orchestrator/                                               # LangGraph workflow management
+│   ├── prompts/                                                    # AI prompt templates
+│   ├── llm.py                                                      # Language model setup
+│   └── memory.py                                                   # State persistence
+├── app/                                                            # User interface
+│   ├── streamlit_app.py                                            # Modern Streamlit web interface
+│   ├── deprecated_terminal_app.py                                  # Legacy terminal interface
+│   ├── config.py                                                   # App configuration
+│   └── ui_utils.py                                                 # UI utility functions
+├── assets/                                                         # UI assets and icons
+├── linkedin/                                                       # LinkedIn data handling
+│   ├── profiles.py                                                 # Mock profile data
+│   ├── apify_scrapper.py                                           # Initial Apify integration (not yet enabled)
+│   ├── jd_for_arjun_srivastava.md                                  # Job description for testing
+│   ├── jd_for_michael_rodrigues.md                                 # Another job description for testing
+│   ├── jd_for_sarah_chen.md                                        # Another job description for testing
+│   ├── linkedin_data_arjun_srivastava.json                         # LinkedIn data for Arjun Srivastava
+│   ├── linkedin_data_michael_rodrigues.json                        # LinkedIn data for Michael Rodrigues
+│   └── linkedin_data_sarah_chen.json                               # LinkedIn data for Sarah Chen
+├── docs/                                                           # Documentation and schemas
 │   ├── approach.md
 │   ├── challenges_and_solutions.md
 │   ├── initial_schema.png
 │   └── linkedin_assistant_impl_schema.png
-├── docker-compose.yml    # Docker Compose configuration
-├── Dockerfile.venv       # Container configuration (recommended)
-├── Dockerfile.conda      # Alternative container configuration
-├── requirements.txt      # Python dependencies
-├── .env.example          # Example environment variables
-├── .gitignore            # Git ignore file
-├── .dockerignore         # Docker ignore file 
-└── README.md             # Project documentation
+├── docker-compose.yml                                              # Docker Compose configuration
+├── Dockerfile.venv                                                 # Container configuration (recommended)
+├── Dockerfile.conda                                                # Alternative container configuration
+├── requirements.txt                                                # Python dependencies
+├── .env.example                                                    # Example environment variables
+├── .gitignore                                                      # Git ignore file
+├── .dockerignore                                                   # Docker ignore file
+└── README.md                                                       # Project documentation
 ```
 
 ## Configuration
@@ -319,9 +281,9 @@ model = ChatGoogleGenerativeAI(
 
 ## Current Limitations
 
-- **Profile Scraping**: Currently uses mock profiles (Apify integration planned)
+- **Profile Scraping**: Currently uses local profiles (Apify integration planned)
 - **Data Persistence**: In-memory only (database integration planned)
-- **Real-time Scraping**: LinkedIn data is simulated using mock profiles
+- **Real-time Scraping**: LinkedIn data is simulated using local profiles
 
 ## Roadmap
 
