@@ -232,7 +232,15 @@ class LinkedInGenieStreamlit:
 
     def _check_existing_api_keys(self):
         """Check if API keys already exist and are valid"""
-        # First check environment variables. See if they might be loaded from .env
+        # Check if .env file exists first - if not, API keys are definitely not configured
+        env_path = os.path.join(project_root, '.env')
+        if not os.path.exists(env_path):
+            # Clear any existing environment variables that might be cached
+            os.environ.pop('GOOGLE_API_KEY', None)
+            os.environ.pop('APIFY_API_TOKEN', None)
+            return False
+        
+        # Check environment variables that might be loaded from .env
         google_key = os.getenv('GOOGLE_API_KEY')
         # apify_key = os.getenv('APIFY_API_TOKEN')  # Commented out for now
         
@@ -244,11 +252,6 @@ class LinkedInGenieStreamlit:
             
             if google_valid:  # and apify_valid (commented out)
                 return True
-        
-        # If not in environment, check .env file directly
-        env_path = os.path.join(project_root, '.env')
-        if not os.path.exists(env_path):
-            return False
         
         try:
             with open(env_path, 'r') as f:
@@ -673,23 +676,22 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         profile_not_found()
 
     def _clear_all_data(self):
-        """Clear all session data but preserve API keys for security"""
-        # Do not clear .env file - preserve API configuration as per requirements
-        # env_path = os.path.join(project_root, '.env')
-        # if os.path.exists(env_path):
-        #     try:
-        #         os.remove(env_path)
-        #     except Exception as e:
-        #         st.error(f"Error removing .env file: {e}")
+        """Clear all session data including API keys and .env file"""
+        # Clear .env file to remove stored API keys
+        env_path = os.path.join(project_root, '.env')
+        if os.path.exists(env_path):
+            try:
+                os.remove(env_path)
+            except Exception as e:
+                st.error(f"Error removing .env file: {e}")
         
-        # Do not clear environment variables - preserve API configuration
-        # os.environ.pop('GOOGLE_API_KEY', None)
-        # os.environ.pop('APIFY_API_TOKEN', None)
+        # Clear environment variables to remove API keys from memory
+        os.environ.pop('GOOGLE_API_KEY', None)
+        os.environ.pop('APIFY_API_TOKEN', None)
         
-        # Clear all session state except API key configuration
+        # Clear all session state completely
         for key in list(st.session_state.keys()):
-            if key not in ['api_keys_configured', 'api_keys_tested', 'keys_loaded_message_shown']:
-                del st.session_state[key]
+            del st.session_state[key]
     
     def _show_logout_dialog(self):
         """Show logout confirmation dialog"""
@@ -823,6 +825,13 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
             self._show_invalid_profile_dialog()
             return
         
+        # Double-check API keys are configured and .env file exists
+        # This ensures proper behavior after logout when .env file is deleted
+        env_path = os.path.join(project_root, '.env')
+        if not os.path.exists(env_path) or not st.session_state.api_keys_configured:
+            # Force re-check of API keys if .env file doesn't exist
+            st.session_state.api_keys_configured = self._check_existing_api_keys()
+            
         # Check if API keys are configured
         if not st.session_state.api_keys_configured:
             self._display_api_config_screen()
