@@ -34,6 +34,108 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# Clear Streamlit cache at the start of every session to prevent caching issues
+def clear_streamlit_cache():
+    """Clear all Streamlit cache to prevent lingering state issues between sessions"""
+    try:
+        # Clear all cached data (st.cache_data)
+        st.cache_data.clear()
+        
+        # Clear all cached resources (st.cache_resource) 
+        st.cache_resource.clear()
+        
+        # Also clear legacy cache if it exists (for older Streamlit versions)
+        if hasattr(st, 'legacy_caching'):
+            st.legacy_caching.clear_cache()
+        
+        # Clear any cached hash functions
+        if hasattr(st, '_hash_funcs'):
+            st._hash_funcs.clear()
+        
+        # Clear any cached singleton objects
+        if hasattr(st, '_singleton_funcs'):
+            st._singleton_funcs.clear()
+        
+        # Clear any cached memo functions (another legacy cache)
+        if hasattr(st, 'memo'):
+            try:
+                st.memo.clear()
+            except:
+                pass
+        
+        # Clear any cached experimental memo functions
+        if hasattr(st, 'experimental_memo'):
+            try:
+                st.experimental_memo.clear()
+            except:
+                pass
+        
+        # Clear any cached experimental singleton functions
+        if hasattr(st, 'experimental_singleton'):
+            try:
+                st.experimental_singleton.clear()
+            except:
+                pass
+        
+        print("Streamlit cache cleared successfully")
+    except Exception as e:
+        print(f"Warning: Could not clear cache: {e}")
+
+# Clear cache immediately when the app starts, before any other initialization
+clear_streamlit_cache()
+
+# Additional startup cache clearing for a completely fresh session
+try:
+    # Clear backend memory on app startup to prevent cross-session contamination
+    from backend.memory import clear_memory
+    clear_memory()
+except:
+    pass  # Ignore if backend not yet available
+
+def clear_all_streamlit_state(clear_session_state=False):
+    """Clear all Streamlit cache and optionally session state for a completely fresh start"""
+    # First clear all caches
+    clear_streamlit_cache()
+    
+    # Clear backend persistent state that could cause cross-session issues
+    try:
+        # Clear LangGraph memory saver
+        from backend.memory import clear_memory
+        clear_memory()
+        print("Backend memory cleared successfully")
+    except Exception as e:
+        print(f"Warning: Could not clear backend memory: {e}")
+    
+    # Clear any cached agent instances by forcing re-import
+    try:
+        # Clear Python module cache for agents to force fresh instances
+        import sys
+        modules_to_clear = [
+            'backend.orchestrator.handlers',
+            'agents.router',
+            'agents.career_guide', 
+            'agents.content_rewriter',
+            'agents.job_fit_evaluator',
+            'agents.profile_analyzer'
+        ]
+        for module in modules_to_clear:
+            if module in sys.modules:
+                del sys.modules[module]
+        print("Agent modules cleared successfully")
+    except Exception as e:
+        print(f"Warning: Could not clear agent modules: {e}")
+    
+    # Optionally clear session state (useful for complete reset)
+    if clear_session_state and hasattr(st, 'session_state'):
+        try:
+            # Create a list of keys to avoid modifying dict during iteration
+            keys_to_remove = list(st.session_state.keys())
+            for key in keys_to_remove:
+                del st.session_state[key]
+            print("Session state cleared successfully")
+        except Exception as e:
+            print(f"Warning: Could not clear session state: {e}")
+
 def _get_profile_bot_state():
     """Lazy import ProfileBotState to avoid premature initialization"""
     try:
@@ -273,7 +375,7 @@ class LinkedInGenieStreamlit:
                           google_key not in ['', 'your_google_api_key_here'] and
                           len(google_key) > 10)  # Basic length check
             
-            # Commented out Apify validation for now
+            # Commented out Apify validation
             # apify_valid = (apify_key and 
             #              apify_key not in ['', 'your_apify_api_token_here'] and
             #              len(apify_key) > 10)  # Basic length check
@@ -353,10 +455,10 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                 # Verify the keys were loaded into environment
                 # For now, only check Google API key since Apify is not required
                 if not os.getenv('GOOGLE_API_KEY'):
-                    st.warning("⚠️ Google API key saved but may not be loaded into environment yet.")
+                    st.warning("Google API key saved but may not be loaded into environment yet.")
                     
             except ImportError:
-                st.info("💡 API key saved. You may need to restart the app to load it.")
+                st.info("API key saved. You may need to restart the app to load it.")
             
             return True
             
@@ -479,7 +581,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                             time.sleep(1)
                             st.rerun()
                     else:
-                        st.warning("⚠️ Please provide your Google API key to continue.")
+                        st.warning("Please provide your Google API key to continue.")
                 
                 # Add helpful information
                 st.markdown("")
@@ -556,7 +658,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                 """
                 st.markdown(header_html, unsafe_allow_html=True)
             else:
-                st.header("📊 Profile Information")
+                st.header("Profile Information")
             
             # Only display if bot_state is initialized
             if st.session_state.bot_state is None:
@@ -631,6 +733,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                 if st.button("Logout & Clear Data", help="Clear all data and API keys, then restart", use_container_width=True, type="secondary", icon=":material/logout:"):
                     st.session_state.show_logout_dialog = True
                     st.rerun()
+                
+                st.markdown("")
+                st.markdown("**Development Tools**")
+                if st.button("Full Reset (Dev)", help="Complete reset of all caches and state for development", use_container_width=True, type="secondary", icon=":material/refresh:"):
+                    self._full_reset_for_development()
 
     def _validate_linkedin_url(self, user_input):
         """Validate if LinkedIn URL contains valid keywords"""
@@ -661,12 +768,11 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                 "https://www.linkedin.com/in/michael-rodriguez-cfa/", 
                 "https://www.linkedin.com/in/sarah-chen-architect/"
             ]
-            
             for url in valid_urls:
-                st.markdown(f"• {url}")
-            
+                st.markdown(f"```plaintext\n{url}\n```")
+
             st.markdown("")
-            
+
             col1, col2, col3 = st.columns([1, 1, 1])
             with col2:
                 if st.button("OK", type="primary", use_container_width=True):
@@ -689,9 +795,8 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
         os.environ.pop('GOOGLE_API_KEY', None)
         os.environ.pop('APIFY_API_TOKEN', None)
         
-        # Clear all session state completely
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
+        # Use the comprehensive clearing function to clear everything
+        clear_all_streamlit_state(clear_session_state=True)
     
     def _show_logout_dialog(self):
         """Show logout confirmation dialog"""
@@ -850,7 +955,7 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
                 if not is_valid:
                     st.error(f"❌ API key validation failed: {message}")
                     st.error("Please check your API keys and restart the app.")
-                    if st.button("🔄 Reconfigure API Keys"):
+                    if st.button("Reconfigure API Keys", icon=":material/autorenew:"):
                         st.session_state.api_keys_configured = False
                         st.rerun()
                     return
@@ -1151,6 +1256,27 @@ APIFY_API_TOKEN={apify_api_token if apify_api_token else 'your_apify_api_token_h
             
         except Exception as e:
             return False, f"Error testing API keys: {str(e)}"
+
+    def _full_reset_for_development(self):
+        """Complete reset for development - clears everything including backend state"""
+        try:
+            # Clear all Streamlit cache and backend state
+            clear_all_streamlit_state(clear_session_state=True)
+            
+            # Clear environment variables
+            os.environ.pop('GOOGLE_API_KEY', None)
+            os.environ.pop('APIFY_API_TOKEN', None)
+            
+            # Additional Python cache clearing
+            import gc
+            gc.collect()  # Force garbage collection
+            
+            st.success("Complete reset performed - all caches and state cleared!", icon=":material/check_circle:")
+            time.sleep(1)
+            st.rerun()
+            
+        except Exception as e:
+            st.error(f"Error during full reset: {e}")
 
 def main():
     app = LinkedInGenieStreamlit()
