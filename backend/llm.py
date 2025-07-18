@@ -12,7 +12,7 @@ def get_chat_model(temperature: float = 0.3) -> ChatGoogleGenerativeAI:
         raise ValueError("GOOGLE_API_KEY not found. Check your .env file.")
     try:
         return ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash-preview-04-17",
+            model="gemini-2.5-flash",
             google_api_key=GOOGLE_API_KEY,
             temperature=temperature,
             top_p=0.9,
