@@ -2,7 +2,8 @@ __module_name__ = "profiles"
 
 import os
 import json
-from .apify_scraper import linkedin_scraper
+
+LINKEDIN_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 mock_linkedin_urls = {
@@ -57,10 +58,9 @@ profile_d = {
 try:
     # Load files and create a dictionary of profiles
     local_profiles = {}
-    linkedin_dir = "linkedin"
-    json_files = [f for f in os.listdir(linkedin_dir) if f.endswith('.json')]
+    json_files = [f for f in os.listdir(LINKEDIN_DIR) if f.endswith('.json')]
     for file in json_files:
-        with open(os.path.join(linkedin_dir, file), "r") as f:
+        with open(os.path.join(LINKEDIN_DIR, file), "r") as f:
             profile_data = json.load(f)
             profile_name = file.split('.')[0]
             local_profiles[profile_name] = profile_data
@@ -105,15 +105,13 @@ def get_profile(linkedin_url: str, linkedin_name: str) -> dict:
         raise ValueError("LinkedIn URL cannot be empty.")
     
     # List all json files in the linkedin directory
-    import os
-    linkedin_dir = "linkedin"
-    json_files = [f for f in os.listdir(linkedin_dir) if f.endswith('.json')]
+    json_files = [f for f in os.listdir(LINKEDIN_DIR) if f.endswith('.json')]
 
     # Check if the profile already exists in the mock directory
     for file in json_files:
         if linkedin_name in file:
             try:
-                with open(os.path.join(linkedin_dir, file), "r") as f:
+                with open(os.path.join(LINKEDIN_DIR, file), "r") as f:
                     profile_data = json.load(f)
                     print(f"File exists locally! Loading... : {file}")
                 return profile_data
@@ -122,9 +120,14 @@ def get_profile(linkedin_url: str, linkedin_name: str) -> dict:
                 return get_mock_profile(linkedin_url)
     # If not found, scrape the profile
     try:
+        from .apify_scraper import linkedin_scraper
+
         linkedin_name = linkedin_url.split("/")[-2]
         linkedin_scraper(linkedin_url, linkedin_name=linkedin_name)
-        with open(f"linkedin/mock_profile_{linkedin_name}.json", "r") as f:
+        generated_profile_path = os.path.join(
+            os.getcwd(), f"linkedin_profile_{linkedin_name}.json"
+        )
+        with open(generated_profile_path, "r") as f:
             profile_data = json.load(f)
         return profile_data
     except Exception as e:

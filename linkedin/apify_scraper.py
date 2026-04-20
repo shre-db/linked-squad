@@ -2,13 +2,25 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from apify_client import ApifyClient
 import json
-import time
+
+try:
+    from apify_client import ApifyClient
+    _APIFY_IMPORT_ERROR = None
+except Exception as exc:
+    ApifyClient = None
+    _APIFY_IMPORT_ERROR = exc
 
 class LinkedInScraper:
     def __init__(self, api_token):
         """Initialize the Apify client with your API token"""
+        if ApifyClient is None:
+            raise RuntimeError(
+                "Apify client could not be imported. Install compatible Apify "
+                "dependencies before using live profile scraping."
+            ) from _APIFY_IMPORT_ERROR
+        if not api_token:
+            raise ValueError("APIFY_API_TOKEN is not set.")
         self.client = ApifyClient(api_token)
         
     def scrape_profile(self, linkedin_url, actor_id="curious_coder/linkedin-profile-scraper"):
@@ -106,9 +118,10 @@ def linkedin_scraper(linkedin_url=None, linkedin_name=None):
         print(json.dumps(clean_data, indent=2))
         
         # Save to file
-        with open(f"linkedin_profile_{linkedin_name}.json", "w") as f:
+        output_path = f"linkedin_profile_{linkedin_name}.json"
+        with open(output_path, "w") as f:
             json.dump(clean_data, f, indent=2)
-        print(f"\nProfile data saved to linkedin_profile_{linkedin_name}.json")
+        print(f"\nProfile data saved to {output_path}")
 
 if __name__ == "__main__":
     linkedin_scraper()
